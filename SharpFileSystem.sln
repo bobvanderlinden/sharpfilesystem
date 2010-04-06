@@ -9,7 +9,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFileSystem.Resources",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFileSystem.SharpZipLib", "SharpFileSystem.SharpZipLib\SharpFileSystem.SharpZipLib.csproj", "{E0BAC37A-07E5-4192-8BD9-51C7CA66C165}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFileSystem.Tests", "SharpFileSystem.Tests\SharpFileSystem.Tests.csproj", "{E4BA8FB4-ACD6-43EB-BB03-14AA0C376F5B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0F7EEFA8-7215-406A-9353-849DF790CAA0}"
+	ProjectSection(SolutionItems) = preProject
+		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
+		SharpFileSystem.vsmdi = SharpFileSystem.vsmdi
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = SharpFileSystem.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -31,6 +42,10 @@ Global
 		{E0BAC37A-07E5-4192-8BD9-51C7CA66C165}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0BAC37A-07E5-4192-8BD9-51C7CA66C165}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0BAC37A-07E5-4192-8BD9-51C7CA66C165}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4BA8FB4-ACD6-43EB-BB03-14AA0C376F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4BA8FB4-ACD6-43EB-BB03-14AA0C376F5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4BA8FB4-ACD6-43EB-BB03-14AA0C376F5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4BA8FB4-ACD6-43EB-BB03-14AA0C376F5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

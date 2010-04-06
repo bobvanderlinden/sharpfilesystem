@@ -11,10 +11,15 @@ namespace SharpFileSystem
         public static FileSystemPath Root { get; private set; }
 
         private readonly string _path;
+        
+        public string Path
+        {
+            get { return _path ?? "/"; }
+        }
 
         public bool IsDirectory
         {
-            get { return _path[_path.Length - 1] == DirectorySeparator; }
+            get { return Path[Path.Length - 1] == DirectorySeparator; }
         }
 
         public bool IsFile
@@ -24,14 +29,14 @@ namespace SharpFileSystem
 
         public bool IsRoot
         {
-            get { return _path.Length == 1; }
+            get { return Path.Length == 1; }
         }
 
         public string EntityName
         {
             get
             {
-                string name = _path;
+                string name = Path;
                 if (IsRoot)
                     return null;
                 int endOfName = name.Length;
@@ -46,7 +51,7 @@ namespace SharpFileSystem
         {
             get
             {
-                string parentPath = _path;
+                string parentPath = Path;
                 if (IsRoot)
                     throw new InvalidOperationException("There is no parent of root.");
                 int lookaheadCount = parentPath.Length;
@@ -66,8 +71,6 @@ namespace SharpFileSystem
 
         private FileSystemPath(string path)
         {
-            if (string.IsNullOrEmpty(path))
-                throw new ArgumentException();
             _path = path;
         }
 
@@ -95,14 +98,14 @@ namespace SharpFileSystem
                 throw new ArgumentException("The specified path should be relative.", "relativePath");
             if (!IsDirectory)
                 throw new InvalidOperationException("This FileSystemPath is not a directory.");
-            return new FileSystemPath(_path + relativePath);
+            return new FileSystemPath(Path + relativePath);
         }
 
         public FileSystemPath AppendPath(FileSystemPath path)
         {
             if (!IsDirectory)
                 throw new InvalidOperationException("This FileSystemPath is not a directory.");
-            return new FileSystemPath(_path + path._path.Substring(1));
+            return new FileSystemPath(Path + path.Path.Substring(1));
         }
 
         public FileSystemPath AppendDirectory(string directoryName)
@@ -111,7 +114,7 @@ namespace SharpFileSystem
                 throw new ArgumentException("The specified name includes directory-separator(s).", "directoryName");
             if (!IsDirectory)
                 throw new InvalidOperationException("The specified FileSystemPath is not a directory.");
-            return new FileSystemPath(_path + directoryName + DirectorySeparator);
+            return new FileSystemPath(Path + directoryName + DirectorySeparator);
         }
 
         public FileSystemPath AppendFile(string fileName)
@@ -120,12 +123,12 @@ namespace SharpFileSystem
                 throw new ArgumentException("The specified name includes directory-separator(s).", "fileName");
             if (!IsDirectory)
                 throw new InvalidOperationException("The specified FileSystemPath is not a directory.");
-            return new FileSystemPath(_path + fileName);
+            return new FileSystemPath(Path + fileName);
         }
 
         public bool IsParentOf(FileSystemPath path)
         {
-            return IsDirectory && _path.Length != path._path.Length && path._path.StartsWith(_path);
+            return IsDirectory && Path.Length != path.Path.Length && path.Path.StartsWith(Path);
         }
 
         public bool IsChildOf(FileSystemPath path)
@@ -135,20 +138,18 @@ namespace SharpFileSystem
 
         public FileSystemPath RemoveParent(FileSystemPath parent)
         {
-            if (Equals(parent))
-                return Root;
-            if (!parent.IsParentOf(this))
+            if (!parent.IsDirectory)
+                throw new ArgumentException("The specified path can not be the parent of this path: it is not a directory.");
+            if (!Path.StartsWith(parent.Path))
                 throw new ArgumentException("The specified path is not a parent of this path.");
-            return new FileSystemPath(_path.Remove(0, parent._path.Length - 1));
+            return new FileSystemPath(Path.Remove(0, parent.Path.Length - 1));
         }
 
         public FileSystemPath RemoveChild(FileSystemPath child)
         {
-            if (Equals(child))
-                return Root;
-            if (!child.IsChildOf(this))
+            if (!Path.EndsWith(child.Path))
                 throw new ArgumentException("The specified path is not a child of this path.");
-            return new FileSystemPath(_path.Substring(0, _path.Length - child._path.Length + 1));
+            return new FileSystemPath(Path.Substring(0, Path.Length - child.Path.Length + 1));
         }
 
         public string GetExtension()
@@ -158,7 +159,7 @@ namespace SharpFileSystem
             string name = EntityName;
             int extensionIndex = name.LastIndexOf('.');
             if (extensionIndex < 0)
-                return null;
+                return "";
             return name.Substring(extensionIndex);
         }
 
@@ -170,7 +171,7 @@ namespace SharpFileSystem
             int extensionIndex = name.LastIndexOf('.');
             if (extensionIndex >= 0)
                 return ParentPath.AppendFile(name.Substring(0, extensionIndex) + extension);
-            return FileSystemPath.Parse(_path + extension);
+            return FileSystemPath.Parse(Path + extension);
         }
 
         public string[] GetDirectorySegments()
@@ -189,12 +190,12 @@ namespace SharpFileSystem
 
         public int CompareTo(FileSystemPath other)
         {
-            return _path.CompareTo(other._path);
+            return Path.CompareTo(other.Path);
         }
 
         public override string ToString()
         {
-            return _path;
+            return Path;
         }
 
         public override bool Equals(object obj)
@@ -206,12 +207,12 @@ namespace SharpFileSystem
 
         public bool Equals(FileSystemPath other)
         {
-            return other._path.Equals(_path);
+            return other.Path.Equals(Path);
         }
 
         public override int GetHashCode()
         {
-            return _path.GetHashCode();
+            return Path.GetHashCode();
         }
 
         public static bool operator ==(FileSystemPath pathA, FileSystemPath pathB)
