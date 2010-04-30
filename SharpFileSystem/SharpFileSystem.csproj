@@ -53,8 +53,10 @@
     <Compile Include="FileSystemEntity.cs" />
     <Compile Include="FileSystemExtensions.cs" />
     <Compile Include="FileSystems\FileSystemMounter.cs" />
+    <Compile Include="FileSystems\FileSystemWrapper.cs" />
     <Compile Include="FileSystems\MergedFileSystem.cs" />
     <Compile Include="FileSystems\ReadOnlyFileSystem.cs" />
+    <Compile Include="FileSystems\SealedFileSystem.cs" />
     <Compile Include="FileSystems\SubFileSystem.cs" />
     <Compile Include="Collections\InverseComparer.cs" />
     <Compile Include="IO\CircularBuffer.cs" />
