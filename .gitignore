@@ -13,3 +13,7 @@ TestResults
 Thumbs.db
 .DS_Store
 _ReSharper*
+*.ReSharper.user
+*.resharper.user
+UpgradeLog*.XML
+_Upgrade*
