@@ -43,6 +43,19 @@ namespace SharpFileSystem
             }
         }
 
+        public static void CreateDirectoryRecursive(this IFileSystem fileSystem, FileSystemPath path)
+        {
+            if (!path.IsDirectory)
+                throw new ArgumentException("The specified path is not a directory.");
+            var currentDirectoryPath = FileSystemPath.Root;
+            foreach(var dirName in path.GetDirectorySegments())
+            {
+                currentDirectoryPath = currentDirectoryPath.AppendDirectory(dirName);
+                if (!fileSystem.Exists(currentDirectoryPath))
+                    fileSystem.CreateDirectory (currentDirectoryPath);
+            }
+        }
+
         #region Move Extensions
         public static void Move(this IFileSystem sourceFileSystem, FileSystemPath sourcePath, IFileSystem destinationFileSystem, FileSystemPath destinationPath)
         {
