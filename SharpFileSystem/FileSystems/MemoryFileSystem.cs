@@ -160,7 +160,7 @@ namespace SharpFileSystem.FileSystems
             public override int Read(byte[] buffer, int offset, int count)
             {
                 int mincount = Math.Min(count, Math.Abs((int)(Length - Position)));
-                Buffer.BlockCopy(Content, 0, buffer, offset, mincount);
+                Buffer.BlockCopy(Content, (int)Position, buffer, offset, mincount);
                 Position += mincount;
                 return mincount;
             }
