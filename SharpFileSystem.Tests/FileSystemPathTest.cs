@@ -307,9 +307,8 @@ namespace SharpFileSystem.Tests
         [TestMethod()]
         public void ChangeExtensionTest()
         {
-            _paths
-                .Where(p => p.IsFile)
-                .All(p => p.ChangeExtension(".exe").GetExtension() == ".exe");
+            foreach(var p in _paths.Where(p => p.IsFile))
+                Assert.IsTrue( p.ChangeExtension(".exe").GetExtension() == ".exe");
             EAssert.Throws<ArgumentException>(() => directoryA.ChangeExtension(".exe"));
         }
 
@@ -319,14 +318,18 @@ namespace SharpFileSystem.Tests
         [TestMethod()]
         public void AppendPathTest()
         {
-            Directories.All(p => p.AppendPath(root) == p);
-            Directories.All(p => p.AppendPath("") == p);
+            Assert.IsTrue(Directories.All(p => p.AppendPath(root) == p));
+            Assert.IsTrue(Directories.All(p => p.AppendPath("") == p));
 
             var subpath = FileSystemPath.Parse("/dir/file");
             var subpathstr = "dir/file";
-            Directories.All(p => p.AppendPath(subpath).ParentPath.ParentPath == p);
-            Directories.All(p => p.AppendPath(subpathstr).ParentPath.ParentPath == p);
-            Directories.All(pa => _paths.All(pb => pa.AppendPath(pb).IsChildOf(pa)));
+            foreach(var p in Directories)
+                Assert.IsTrue(p.AppendPath(subpath).ParentPath.ParentPath == p);
+            foreach(var p in Directories)
+                Assert.IsTrue(p.AppendPath(subpathstr).ParentPath.ParentPath == p);
+            foreach(var pa in Directories)
+            foreach (var pb in _paths.Where(pb => !pb.IsRoot))
+                Assert.IsTrue(pa.AppendPath(pb).IsChildOf(pa));
             EAssert.Throws<InvalidOperationException>(() => fileA.AppendPath(subpath));
             EAssert.Throws<InvalidOperationException>(() => fileA.AppendPath(subpathstr));
             EAssert.Throws<ArgumentException>(() => directoryA.AppendPath("/rootedpath/"));
@@ -338,9 +341,12 @@ namespace SharpFileSystem.Tests
         [TestMethod()]
         public void AppendFileTest()
         {
-            Directories.All(d => d.AppendFile("file").IsFile);
-            Directories.All(d => d.AppendFile("file").EntityName == "file");
-            Directories.All(d => d.AppendFile("file").ParentPath == d);
+            foreach(var d in Directories)
+                Assert.IsTrue(d.AppendFile("file").IsFile);
+            foreach (var d in Directories)
+                Assert.IsTrue(d.AppendFile("file").EntityName == "file");
+            foreach(var d in Directories)
+                Assert.IsTrue(d.AppendFile("file").ParentPath == d);
             EAssert.Throws<InvalidOperationException>(() => fileA.AppendFile("file"));
             EAssert.Throws<ArgumentException>(() => directoryA.AppendFile("dir/file"));
         }
@@ -351,9 +357,12 @@ namespace SharpFileSystem.Tests
         [TestMethod()]
         public void AppendDirectoryTest()
         {
-            Directories.All(d => d.AppendDirectory("dir").IsDirectory);
-            Directories.All(d => d.AppendDirectory("dir").EntityName == "dir");
-            Directories.All(d => d.AppendDirectory("dir").ParentPath == d);
+            foreach(var d in Directories)
+                Assert.IsTrue(d.AppendDirectory("dir").IsDirectory);
+            foreach(var d in Directories)
+                Assert.IsTrue(d.AppendDirectory("dir").EntityName == "dir");
+            foreach (var d in Directories)
+                Assert.IsTrue(d.AppendDirectory("dir").ParentPath == d);
             EAssert.Throws<InvalidOperationException>(() => fileA.AppendDirectory("dir"));
             EAssert.Throws<ArgumentException>(() => root.AppendDirectory("dir/dir"));
         }
