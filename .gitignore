@@ -9,6 +9,7 @@ TestResults
 *.suo
 *.userprefs
 *.testrunconfig
+*.user
 
 Thumbs.db
 .DS_Store
