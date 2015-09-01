@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpFileSystem.SevenZip</RootNamespace>
     <AssemblyName>SharpFileSystem.SevenZip</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
@@ -18,6 +18,7 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,6 +29,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,6 +39,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SevenZipSharp, Version=0.60.3695.26174, Culture=neutral, PublicKeyToken=20de82c62b055c88, processorArchitecture=MSIL">
@@ -63,7 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpFileSystem\SharpFileSystem.csproj">
-      <Project>{3C4D07BA-23B5-4A63-92CF-F3BF892B7329}</Project>
+      <Project>{3c4d07ba-23b5-4a63-92cf-f3bf892b7329}</Project>
       <Name>SharpFileSystem</Name>
     </ProjectReference>
   </ItemGroup>
