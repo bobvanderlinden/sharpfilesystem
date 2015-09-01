@@ -298,7 +298,7 @@ namespace SharpFileSystem.Tests
         {
             foreach(var pa in _paths)
                 foreach(var pb in _paths)
-                Assert.AreEqual(pa.CompareTo(pb), pa.ToString().CompareTo(pb.ToString()));
+                Assert.AreEqual(Math.Sign(pa.CompareTo(pb)), Math.Sign(String.Compare(pa.ToString(), pb.ToString(), StringComparison.Ordinal)));
         }
 
         /// <summary>
