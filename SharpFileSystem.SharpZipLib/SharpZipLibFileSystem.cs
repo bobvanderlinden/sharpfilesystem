@@ -35,12 +35,13 @@ namespace SharpFileSystem.SharpZipLib
 
         protected FileSystemPath ToPath(ZipEntry entry)
         {
-            return FileSystemPath.Parse(entry.Name);
+            return FileSystemPath.Parse(FileSystemPath.DirectorySeparator + entry.Name);
         }
 
         protected string ToEntryPath(FileSystemPath path)
         {
-            return path.ToString();
+            // Remove heading '/' from path.
+            return path.Path.TrimStart(FileSystemPath.DirectorySeparator);
         }
 
         protected ZipEntry ToEntry(FileSystemPath path)
@@ -55,7 +56,15 @@ namespace SharpFileSystem.SharpZipLib
 
         public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
         {
-            return GetZipEntries().Select(e => ToPath(e)).Where(p => p.ParentPath == path).ToList();
+            return GetZipEntries()
+                .Select(ToPath)
+                .Where(entryPath => path.IsParentOf(entryPath))
+                .Select(entryPath => entryPath.ParentPath == path
+                    ? entryPath
+                    : path.AppendDirectory(entryPath.RemoveParent(path).GetDirectorySegments()[0])
+                    )
+                .Distinct()
+                .ToList();
         }
 
         public bool Exists(FileSystemPath path)
