@@ -69,7 +69,11 @@ namespace SharpFileSystem.SharpZipLib
 
         public bool Exists(FileSystemPath path)
         {
-            return ToEntry(path) != null;
+            if (path.IsFile)
+                return ToEntry(path) != null;
+            return GetZipEntries()
+                .Select(ToPath)
+                .Any(entryPath => entryPath.IsChildOf(path));
         }
 
         public Stream CreateFile(FileSystemPath path)
