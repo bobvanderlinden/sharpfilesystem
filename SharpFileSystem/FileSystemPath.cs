@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace SharpFileSystem
@@ -101,6 +102,7 @@ namespace SharpFileSystem
             return new FileSystemPath(Path + relativePath);
         }
 
+        [Pure]
         public FileSystemPath AppendPath(FileSystemPath path)
         {
             if (!IsDirectory)
@@ -108,6 +110,7 @@ namespace SharpFileSystem
             return new FileSystemPath(Path + path.Path.Substring(1));
         }
 
+        [Pure]
         public FileSystemPath AppendDirectory(string directoryName)
         {
             if (directoryName.Contains(DirectorySeparator.ToString()))
@@ -117,6 +120,7 @@ namespace SharpFileSystem
             return new FileSystemPath(Path + directoryName + DirectorySeparator);
         }
 
+        [Pure]
         public FileSystemPath AppendFile(string fileName)
         {
             if (fileName.Contains(DirectorySeparator.ToString()))
@@ -126,16 +130,19 @@ namespace SharpFileSystem
             return new FileSystemPath(Path + fileName);
         }
 
+        [Pure]
         public bool IsParentOf(FileSystemPath path)
         {
             return IsDirectory && Path.Length != path.Path.Length && path.Path.StartsWith(Path);
         }
 
+        [Pure]
         public bool IsChildOf(FileSystemPath path)
         {
             return path.IsParentOf(this);
         }
 
+        [Pure]
         public FileSystemPath RemoveParent(FileSystemPath parent)
         {
             if (!parent.IsDirectory)
@@ -145,6 +152,7 @@ namespace SharpFileSystem
             return new FileSystemPath(Path.Remove(0, parent.Path.Length - 1));
         }
 
+        [Pure]
         public FileSystemPath RemoveChild(FileSystemPath child)
         {
             if (!Path.EndsWith(child.Path))
@@ -152,6 +160,7 @@ namespace SharpFileSystem
             return new FileSystemPath(Path.Substring(0, Path.Length - child.Path.Length + 1));
         }
 
+        [Pure]
         public string GetExtension()
         {
             if (!IsFile)
@@ -163,6 +172,7 @@ namespace SharpFileSystem
             return name.Substring(extensionIndex);
         }
 
+        [Pure]
         public FileSystemPath ChangeExtension(string extension)
         {
             if (!IsFile)
@@ -174,6 +184,7 @@ namespace SharpFileSystem
             return FileSystemPath.Parse(Path + extension);
         }
 
+        [Pure]
         public string[] GetDirectorySegments()
         {
             FileSystemPath path = this;
@@ -188,16 +199,19 @@ namespace SharpFileSystem
             return segments.ToArray();
         }
 
+        [Pure]
         public int CompareTo(FileSystemPath other)
         {
             return Path.CompareTo(other.Path);
         }
 
+        [Pure]
         public override string ToString()
         {
             return Path;
         }
 
+        [Pure]
         public override bool Equals(object obj)
         {
             if (obj is FileSystemPath)
@@ -205,11 +219,13 @@ namespace SharpFileSystem
             return false;
         }
 
+        [Pure]
         public bool Equals(FileSystemPath other)
         {
             return other.Path.Equals(Path);
         }
 
+        [Pure]
         public override int GetHashCode()
         {
             return Path.GetHashCode();
