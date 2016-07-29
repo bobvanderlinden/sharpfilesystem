@@ -8,6 +8,7 @@ using SharpFileSystem.SharpZipLib;
 namespace SharpFileSystem.Tests.SharpZipLib
 {
     [TestClass]
+    [DeploymentItem("SharpZipLib/Content/test.zip", "SharpZipLib/Content")]
     public class SharpZipLibFileSystemTest
     {
         private FileStream fileStream;
