@@ -10,6 +10,9 @@ TestResults
 *.userprefs
 *.testrunconfig
 *.user
+*.nupkg
+*.exe
+*~
 
 Thumbs.db
 .DS_Store

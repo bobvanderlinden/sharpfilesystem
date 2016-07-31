@@ -6,9 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SharpFileSystem.SevenZip")]
-[assembly: AssemblyDescription("")]
+// NuGet automatically substitutes this as $description$ in the .nuspec
+[assembly: AssemblyDescription("Access archives supported by 7-zip as a virtual file system")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+// NuGet automatically substitutes this as $author$ in the .nuspec
+[assembly: AssemblyCompany("FrozenCow")]
 [assembly: AssemblyProduct("SharpFileSystem.SevenZip")]
 [assembly: AssemblyCopyright("Copyright ©  2010")]
 [assembly: AssemblyTrademark("")]
@@ -34,3 +36,9 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+// This is substituted as $version$ in the .nuspec. It lets you use free-form text,
+// meaning you can put semver (MAJOR.MINOR.PATCH) (3 parts rather than 4) in there.
+// This is also helpful because it shows up as “Product version” in Windows Explorer’s
+// Properties window.
+[assembly: AssemblyInformationalVersion("1.0.0")]
