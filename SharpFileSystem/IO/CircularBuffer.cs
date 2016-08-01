@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
-namespace System.IO
+namespace SharpFileSystem.IO
 {
     // CircularBuffer from http://circularbuffer.codeplex.com/.
     public class CircularBuffer<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnumerable

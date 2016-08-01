@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
+using System.IO;
 
-namespace System.IO
+namespace SharpFileSystem.IO
 {
     public class ConcatStream : Stream
     {

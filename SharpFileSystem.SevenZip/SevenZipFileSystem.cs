@@ -5,6 +5,7 @@ using SevenZip;
 using System.IO;
 using System.Threading;
 using SharpFileSystem;
+using SharpFileSystem.IO;
 using Directory = SharpFileSystem.Directory;
 using File = SharpFileSystem.File;
 

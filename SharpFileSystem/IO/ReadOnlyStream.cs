@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace System.IO
+namespace SharpFileSystem.IO
 {
     public class ReadOnlyStream : Stream
     {

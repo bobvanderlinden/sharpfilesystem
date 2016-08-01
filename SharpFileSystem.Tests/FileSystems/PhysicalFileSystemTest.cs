@@ -3,6 +3,7 @@ using SharpFileSystem.FileSystems;
 using System.IO;
 using System.Linq;
 using System.Text;
+using SharpFileSystem.IO;
 
 namespace SharpFileSystem.Tests.FileSystems
 {
