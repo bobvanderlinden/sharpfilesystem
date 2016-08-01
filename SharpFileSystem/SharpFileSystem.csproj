@@ -64,7 +64,6 @@
     <Compile Include="IO\EmptyStream.cs" />
     <Compile Include="IO\NonClosableStream.cs" />
     <Compile Include="IO\ReadOnlyStream.cs" />
-    <Compile Include="IO\SafeNetworkStream.cs" />
     <Compile Include="IO\StreamExtensions.cs" />
     <Compile Include="FileSystems\MemoryFileSystem.cs" />
     <Compile Include="IEntityCopier.cs" />
