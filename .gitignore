@@ -18,3 +18,4 @@ _ReSharper*
 *.resharper.user
 UpgradeLog*.XML
 _Upgrade*
+packages
