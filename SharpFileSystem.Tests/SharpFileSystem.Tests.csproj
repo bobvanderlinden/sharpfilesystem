@@ -64,6 +64,8 @@
   <ItemGroup>
     <Compile Include="AssertExtensions.cs" />
     <Compile Include="FileSystemPathTest.cs" />
+    <Compile Include="FileSystems\MemoryFileSystemTest.cs" />
+    <Compile Include="FileSystems\PhysicalFileSystemTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharpZipLib\SharpZipLibFileSystemTest.cs" />
   </ItemGroup>
