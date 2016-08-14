@@ -5,7 +5,6 @@ using System.Reflection;
 using ICSharpCode.SharpZipLib.Zip;
 using NUnit.Framework;
 using SharpFileSystem.SharpZipLib;
-using NUnit.Framework;
 
 namespace SharpFileSystem.Tests.SharpZipLib
 {
@@ -15,7 +14,7 @@ namespace SharpFileSystem.Tests.SharpZipLib
         private FileStream fileStream;
         private SharpZipLibFileSystem fileSystem;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Initialize()
         {
             var directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -24,7 +23,7 @@ namespace SharpFileSystem.Tests.SharpZipLib
             fileSystem = SharpZipLibFileSystem.Open(fileStream);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void Cleanup()
         {
             fileSystem.Dispose();
