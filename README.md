@@ -1,5 +1,7 @@
 # SharpFileSystem
 
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/github/bobvanderlinden/sharpfilesystem?svg=true)]() [![Travis](https://img.shields.io/travis/bobvanderlinden/sharpfilesystem.svg?maxAge=2592000&label=travis)]() [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
+
 SharpFileSystem is a [Virtual File System (VFS)](http://en.wikipedia.org/wiki/Virtual_file_system) implementation for .NET to allow access to different filesystems in the same way for normal files and directories.
 
 ## Motivation
