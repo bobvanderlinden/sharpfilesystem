@@ -18,7 +18,9 @@ namespace SharpFileSystem.Tests.SharpZipLib
         [TestFixtureSetUp]
         public void Initialize()
         {
-            fileStream = System.IO.File.OpenRead("SharpZipLib/Content/test.zip");
+            var directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var zipFilePath = Path.Combine(directoryPath, "SharpZipLib/Content/test.zip");
+            fileStream = System.IO.File.OpenRead(zipFilePath);
             fileSystem = SharpZipLibFileSystem.Open(fileStream);
         }
 
