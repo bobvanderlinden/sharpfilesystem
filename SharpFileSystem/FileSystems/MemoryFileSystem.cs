@@ -8,20 +8,20 @@ namespace SharpFileSystem.FileSystems
 {
     public class MemoryFileSystem : IFileSystem
     {
-        private IDictionary<FileSystemPath, LinkedList<FileSystemPath>> _directories =
-    new Dictionary<FileSystemPath, LinkedList<FileSystemPath>>();
+        private IDictionary<FileSystemPath, ISet<FileSystemPath>> _directories =
+    new Dictionary<FileSystemPath, ISet<FileSystemPath>>();
         private IDictionary<FileSystemPath, MemoryFile> _files =
             new Dictionary<FileSystemPath, MemoryFile>();
         public MemoryFileSystem()
         {
-            _directories.Add(FileSystemPath.Root, new LinkedList<FileSystemPath>());
+            _directories.Add(FileSystemPath.Root, new HashSet<FileSystemPath>());
         }
 
         public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
         {
             if (!path.IsDirectory)
                 throw new ArgumentException("The specified path is no directory.", "path");
-            LinkedList<FileSystemPath> subentities;
+            ISet<FileSystemPath> subentities;
             if (!_directories.TryGetValue(path, out subentities))
                 throw new DirectoryNotFoundException();
             return subentities;
@@ -38,7 +38,7 @@ namespace SharpFileSystem.FileSystems
                 throw new ArgumentException("The specified path is no file.", "path");
             if (!_directories.ContainsKey(path.ParentPath))
                 throw new DirectoryNotFoundException();
-            _directories[path.ParentPath].AddLast(path);
+            _directories[path.ParentPath].Add(path);
             return new MemoryFileStream(_files[path] = new MemoryFile());
         }
 
@@ -56,13 +56,13 @@ namespace SharpFileSystem.FileSystems
         {
             if (!path.IsDirectory)
                 throw new ArgumentException("The specified path is no directory.", "path");
-            LinkedList<FileSystemPath> subentities;
+            ISet<FileSystemPath> subentities;
             if (_directories.ContainsKey(path))
                 throw new ArgumentException("The specified directory-path already exists.", "path");
             if (!_directories.TryGetValue(path.ParentPath, out subentities))
                 throw new DirectoryNotFoundException();
-            subentities.AddLast(path);
-            _directories[path] = new LinkedList<FileSystemPath>();
+            subentities.Add(path);
+            _directories[path] = new HashSet<FileSystemPath>();
         }
 
         public void Delete(FileSystemPath path)

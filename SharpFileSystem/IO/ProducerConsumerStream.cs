@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Threading;
 
-namespace System.IO
+namespace SharpFileSystem.IO
 {
     public class ProducerConsumerStream : Stream
     {

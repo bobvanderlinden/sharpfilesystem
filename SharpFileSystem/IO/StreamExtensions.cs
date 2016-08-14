@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace System.IO
+namespace SharpFileSystem.IO
 {
     public static class StreamExtensions
     {
