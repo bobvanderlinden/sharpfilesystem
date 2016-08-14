@@ -1,0 +1,13 @@
+language: csharp
+mono:
+  - latest
+os:
+  - linux
+  - osx
+solution: SharpFileSystem.sln
+install:
+  - nuget restore SharpFileSystem.sln
+script:
+  - xbuild /p:Configuration=Debug SharpFileSystem.sln
+  - xbuild /p:Configuration=Release SharpFileSystem.sln
+  - mono packages/NUnit.ConsoleRunner.3.4.1/tools/nunit3-console.exe SharpFileSystem.Tests/bin/Debug/SharpFileSystem.Tests.dll
