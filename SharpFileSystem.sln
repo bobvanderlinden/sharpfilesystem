@@ -100,7 +100,4 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = SharpFileSystem.vsmdi
-	EndGlobalSection
 EndGlobal

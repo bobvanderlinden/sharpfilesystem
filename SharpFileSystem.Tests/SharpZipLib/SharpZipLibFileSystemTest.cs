@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using ICSharpCode.SharpZipLib.Zip;
+using NUnit.Framework;
 using SharpFileSystem.SharpZipLib;
 using NUnit.Framework;
 

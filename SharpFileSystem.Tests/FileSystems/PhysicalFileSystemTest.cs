@@ -1,13 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpFileSystem.FileSystems;
+﻿using SharpFileSystem.FileSystems;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NUnit.Framework;
 using SharpFileSystem.IO;
 
 namespace SharpFileSystem.Tests.FileSystems
 {
-    [TestClass]
+    [TestFixture]
     public class PhysicalFileSystemTest
     {
         string Root { get; set; }
@@ -23,7 +23,7 @@ namespace SharpFileSystem.Tests.FileSystems
             FileNamePath = FileSystemPath.Root.AppendFile(FileName);
         }
 
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
             Root = Path.Combine(Path.GetFullPath("."), "TestRoot");
@@ -32,14 +32,14 @@ namespace SharpFileSystem.Tests.FileSystems
             FileSystem = new PhysicalFileSystem(Root);
         }
 
-        [TestCleanup]
+        [TearDown]
         public void Cleanup()
         {
             using (FileSystem) { }
             System.IO.Directory.Delete(Root, true);
         }
 
-        [TestMethod]
+        [Test]
         public void CreateFile()
         {
             Assert.IsFalse(System.IO.File.Exists(AbsoluteFileName));
@@ -74,7 +74,7 @@ namespace SharpFileSystem.Tests.FileSystems
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CreateFile_Exists()
         {
             Assert.IsFalse(System.IO.File.Exists(AbsoluteFileName));
@@ -99,7 +99,7 @@ namespace SharpFileSystem.Tests.FileSystems
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CreateFile_Empty()
         {
             using (var stream = FileSystem.CreateFile(FileNamePath))
