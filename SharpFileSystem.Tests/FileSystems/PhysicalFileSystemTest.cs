@@ -1,4 +1,5 @@
-﻿using SharpFileSystem.FileSystems;
+﻿using System;
+using SharpFileSystem.FileSystems;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,7 +27,7 @@ namespace SharpFileSystem.Tests.FileSystems
         [SetUp]
         public void Initialize()
         {
-            Root = Path.Combine(Path.GetFullPath("."), "TestRoot");
+            Root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
             System.IO.Directory.CreateDirectory(Root);
             AbsoluteFileName = Path.Combine(Root, FileName);
             FileSystem = new PhysicalFileSystem(Root);
