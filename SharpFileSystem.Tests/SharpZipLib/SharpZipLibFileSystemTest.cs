@@ -2,8 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using NUnit.Framework;
+using SharpFileSystem.IO;
 using SharpFileSystem.SharpZipLib;
 
 namespace SharpFileSystem.Tests.SharpZipLib
@@ -11,23 +13,35 @@ namespace SharpFileSystem.Tests.SharpZipLib
     [TestFixture]
     public class SharpZipLibFileSystemTest
     {
-        private FileStream fileStream;
+        private Stream zipStream;
         private SharpZipLibFileSystem fileSystem;
 
         [OneTimeSetUp]
         public void Initialize()
         {
-            var directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var zipFilePath = Path.Combine(directoryPath, "SharpZipLib/Content/test.zip");
-            fileStream = System.IO.File.OpenRead(zipFilePath);
-            fileSystem = SharpZipLibFileSystem.Open(fileStream);
+            var memoryStream = new MemoryStream();
+            zipStream = memoryStream;
+            var zipOutput = new ZipOutputStream(zipStream);
+
+            var fileContentString = "this is a file";
+            var fileContentBytes = Encoding.ASCII.GetBytes(fileContentString);
+            zipOutput.PutNextEntry(new ZipEntry("textfileA.txt")
+            {
+                Size = fileContentBytes.Length
+            });
+            zipOutput.Write(fileContentBytes);
+            zipOutput.PutNextEntry(new ZipEntry("directory/fileInDirectory.txt"));
+            zipOutput.Finish();
+
+            memoryStream.Position = 0;
+            fileSystem = SharpZipLibFileSystem.Open(zipStream);
         }
 
         [OneTimeTearDown]
         public void Cleanup()
         {
             fileSystem.Dispose();
-            fileStream.Dispose();
+            zipStream.Dispose();
         }
 
         private readonly FileSystemPath directoryPath = FileSystemPath.Parse("/directory/");
