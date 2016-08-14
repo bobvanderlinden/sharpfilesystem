@@ -1,0 +1,6 @@
+before_build:
+- cmd: nuget restore SharpFileSystem.sln
+
+test:
+  assemblies:
+    - SharpFileSystem.Tests.dll

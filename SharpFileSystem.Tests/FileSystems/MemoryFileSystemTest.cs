@@ -1,34 +1,34 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpFileSystem.FileSystems;
+﻿using SharpFileSystem.FileSystems;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NUnit.Framework;
 using SharpFileSystem.IO;
 
 namespace SharpFileSystem.Tests.FileSystems
 {
-    [TestClass]
+    [TestFixture]
     public class MemoryFileSystemTest
     {
         MemoryFileSystem FileSystem { get; set; }
         FileSystemPath RootFilePath { get; } = FileSystemPath.Root.AppendFile("x");
 
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
             FileSystem = new MemoryFileSystem();
         }
 
-        [TestCleanup]
+        [TearDown]
         public void Cleanup()
         {
             using (FileSystem) { }
         }
 
-        [TestMethod]
+        [Test]
         public void CreateFile()
         {
             // File shouldn’t exist prior to creation.
@@ -59,7 +59,7 @@ namespace SharpFileSystem.Tests.FileSystems
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CreateFile_Exists()
         {
             Assert.IsFalse(FileSystem.Exists(RootFilePath));
@@ -84,7 +84,7 @@ namespace SharpFileSystem.Tests.FileSystems
                 CollectionAssert.AreEqual(content, stream.ReadAllBytes());
         }
 
-        [TestMethod]
+        [Test]
         public void CreateFile_Empty()
         {
             using (var stream = FileSystem.CreateFile(RootFilePath))
@@ -101,7 +101,7 @@ namespace SharpFileSystem.Tests.FileSystems
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetEntities()
         {
             for (var i = 0; i < 10; i++)

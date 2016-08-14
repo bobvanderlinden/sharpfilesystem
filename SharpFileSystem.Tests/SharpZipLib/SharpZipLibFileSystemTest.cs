@@ -1,38 +1,54 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using SharpFileSystem.IO;
 using SharpFileSystem.SharpZipLib;
 
 namespace SharpFileSystem.Tests.SharpZipLib
 {
-    [TestClass]
-    [DeploymentItem(@"SharpZipLib/Content/test.zip", @"SharpZipLib/Content")]
+    [TestFixture]
     public class SharpZipLibFileSystemTest
     {
-        private FileStream fileStream;
+        private Stream zipStream;
         private SharpZipLibFileSystem fileSystem;
 
-        [TestInitialize]
+        [OneTimeSetUp]
         public void Initialize()
         {
-            fileStream = System.IO.File.OpenRead("SharpZipLib/Content/test.zip");
-            fileSystem = SharpZipLibFileSystem.Open(fileStream);
+            var memoryStream = new MemoryStream();
+            zipStream = memoryStream;
+            var zipOutput = new ZipOutputStream(zipStream);
+
+            var fileContentString = "this is a file";
+            var fileContentBytes = Encoding.ASCII.GetBytes(fileContentString);
+            zipOutput.PutNextEntry(new ZipEntry("textfileA.txt")
+            {
+                Size = fileContentBytes.Length
+            });
+            zipOutput.Write(fileContentBytes);
+            zipOutput.PutNextEntry(new ZipEntry("directory/fileInDirectory.txt"));
+            zipOutput.Finish();
+
+            memoryStream.Position = 0;
+            fileSystem = SharpZipLibFileSystem.Open(zipStream);
         }
 
-        [TestCleanup]
+        [OneTimeTearDown]
         public void Cleanup()
         {
             fileSystem.Dispose();
-            fileStream.Dispose();
+            zipStream.Dispose();
         }
 
         private readonly FileSystemPath directoryPath = FileSystemPath.Parse("/directory/");
         private readonly FileSystemPath textfileAPath = FileSystemPath.Parse("/textfileA.txt");
         private readonly FileSystemPath fileInDirectoryPath = FileSystemPath.Parse("/directory/fileInDirectory.txt");
 
-        [TestMethod]
+        [Test]
         public void GetEntitiesOfRootTest()
         {
             CollectionAssert.AreEquivalent(new[]
@@ -42,7 +58,7 @@ namespace SharpFileSystem.Tests.SharpZipLib
             }, fileSystem.GetEntities(FileSystemPath.Root).ToArray());
         }
 
-        [TestMethod]
+        [Test]
         public void GetEntitiesOfDirectoryTest()
         {
             CollectionAssert.AreEquivalent(new[]
@@ -51,7 +67,7 @@ namespace SharpFileSystem.Tests.SharpZipLib
             }, fileSystem.GetEntities(directoryPath).ToArray());
         }
 
-        [TestMethod]
+        [Test]
         public void ExistsTest()
         {
             Assert.IsTrue(fileSystem.Exists(FileSystemPath.Root));

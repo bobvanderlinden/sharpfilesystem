@@ -1,67 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SharpFileSystem;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
+
 namespace SharpFileSystem.Tests
 {
-    
-    
     /// <summary>
     ///This is a test class for FileSystemPathTest and is intended
     ///to contain all FileSystemPathTest Unit Tests
     ///</summary>
-    [TestClass()]
+    [TestFixture]
     public class FileSystemPathTest
     {
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        #region Additional test attributes
-        // 
-        //You can use the following additional attributes as you write your tests:
-        //
-        //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
-        //
-        //Use ClassCleanup to run code after all tests in a class have run
-        //[ClassCleanup()]
-        //public static void MyClassCleanup()
-        //{
-        //}
-        //
-        //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
-        //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
-        #endregion
-
         private FileSystemPath[] _paths = new[]
                                                     {
                                                         root,
@@ -88,8 +39,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for Root
         ///</summary>
-        [TestMethod()]
-        [DeploymentItem("SharpFileSystem.dll")]
+        [Test]
         public void RootTest()
         {
             Assert.AreEqual(FileSystemPath.Parse("/"), root);
@@ -98,7 +48,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for ParentPath
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void ParentPathTest()
         {
             Assert.IsTrue(
@@ -114,7 +64,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for IsRoot
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void IsRootTest()
         {
             Assert.IsTrue(root.IsRoot);
@@ -125,7 +75,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for IsFile
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void IsFileTest()
         {
             
@@ -137,7 +87,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for IsDirectory
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void IsDirectoryTest()
         {
             Assert.IsTrue(directoryA.IsDirectory);
@@ -148,7 +98,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for EntityName
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void EntityNameTest()
         {
             Assert.AreEqual(fileA.EntityName, "filea");
@@ -159,7 +109,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for ToString
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void ToStringTest()
         {
             string s = "/directorya/";
@@ -169,7 +119,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for RemoveParent
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void RemoveParentTest()
         {
             Assert.AreEqual(directoryB.RemoveParent(directoryB), root);
@@ -185,7 +135,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for RemoveChild
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void RemoveChildTest()
         {
             Assert.AreEqual(fileB.RemoveChild(FileSystemPath.Parse("/fileb.txt")), directoryA);
@@ -199,7 +149,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for Parse
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void ParseTest()
         {
             Assert.IsTrue(_paths.All(p => p == FileSystemPath.Parse(p.ToString())));
@@ -211,7 +161,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for IsRooted
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void IsRootedTest()
         {
             Assert.IsTrue(FileSystemPath.IsRooted("/filea"));
@@ -224,7 +174,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for IsParentOf
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void IsParentOfTest()
         {
             Assert.IsTrue(directoryA.IsParentOf(fileB));
@@ -245,7 +195,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for IsChildOf
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void IsChildOfTest()
         {
             Assert.IsTrue(fileB.IsChildOf(directoryA));
@@ -266,7 +216,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for GetExtension
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void GetExtensionTest()
         {
             Assert.AreEqual(fileA.GetExtension(), "");
@@ -279,7 +229,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for GetDirectorySegments
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void GetDirectorySegmentsTest()
         {
             Assert.AreEqual(0, root.GetDirectorySegments().Length);
@@ -293,7 +243,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for CompareTo
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void CompareToTest()
         {
             foreach(var pa in _paths)
@@ -304,7 +254,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for ChangeExtension
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void ChangeExtensionTest()
         {
             foreach(var p in _paths.Where(p => p.IsFile))
@@ -315,7 +265,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for AppendPath
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void AppendPathTest()
         {
             Assert.IsTrue(Directories.All(p => p.AppendPath(root) == p));
@@ -338,7 +288,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for AppendFile
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void AppendFileTest()
         {
             foreach(var d in Directories)
@@ -354,7 +304,7 @@ namespace SharpFileSystem.Tests
         /// <summary>
         ///A test for AppendDirectory
         ///</summary>
-        [TestMethod()]
+        [Test]
         public void AppendDirectoryTest()
         {
             foreach(var d in Directories)
