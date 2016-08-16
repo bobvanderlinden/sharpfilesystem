@@ -1,4 +1,4 @@
-﻿using SharpFileSystem.Collections;
+using SharpFileSystem.Collections;
 
 namespace SharpFileSystem
 {

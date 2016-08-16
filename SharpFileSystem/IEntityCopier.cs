@@ -1,4 +1,4 @@
-﻿namespace SharpFileSystem
+namespace SharpFileSystem
 {
     public interface IEntityCopier
     {

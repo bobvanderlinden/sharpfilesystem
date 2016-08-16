@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SharpFileSystem.FileSystems;
 using System.IO;
 using System.Linq;
