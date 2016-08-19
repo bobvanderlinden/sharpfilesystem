@@ -5,6 +5,10 @@ configuration: Release
 before_build:
 - cmd: nuget restore SharpFileSystem.sln
 
+build:
+  publish_nuget: true
+  include_nuget_references: true
+
 test:
   assemblies:
     - SharpFileSystem.Tests.dll
