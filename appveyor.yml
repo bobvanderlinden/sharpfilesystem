@@ -1,3 +1,5 @@
+version: 1.0.{build}
+
 platform: Any CPU
 
 configuration: Release
