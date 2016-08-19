@@ -1,6 +1,16 @@
+platform: Any CPU
+
+configuration: Release
+
 before_build:
 - cmd: nuget restore SharpFileSystem.sln
 
 test:
   assemblies:
     - SharpFileSystem.Tests.dll
+
+artifacts:
+  - path: bin/Release
+    name: BuildRelease
+  - path: bin/**/*.nupkg
+    name: NuGet
