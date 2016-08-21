@@ -1,6 +1,30 @@
+version: 1.0.{build}
+
+platform: Any CPU
+
+configuration: Release
+
 before_build:
 - cmd: nuget restore SharpFileSystem.sln
+
+assembly_info:
+  patch: true
+  file: 'GlobalAssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+
+build:
+  publish_nuget: true
+  publish_nuget_symbols: true
+  include_nuget_references: true
 
 test:
   assemblies:
     - SharpFileSystem.Tests.dll
+
+artifacts:
+  - path: bin/Release
+    name: BuildRelease
+  - path: bin/**/*.nupkg
+    name: NuGet
