@@ -27,3 +27,10 @@ artifacts:
     name: BuildRelease
   - path: bin/**/*.nupkg
     name: NuGet
+
+deploy:
+- provider: NuGet
+  server: https://www.nuget.org/api/v2/package
+  api_key:
+    secure: kwXmJKEWMMUNsCgHyVYpCRs9WFKzPMUXIw0foni/0bFL6A3yozhiUb3YoAjhLvQ1
+  skip_symbols: false
