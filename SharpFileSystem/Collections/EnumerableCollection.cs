@@ -36,6 +36,16 @@ namespace SharpFileSystem.Collections
             return this.Any(v => item.Equals(v));
         }
 
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            if (array.Length < Count + arrayIndex)
+                throw new ArgumentOutOfRangeException(nameof(array), "The supplied array (of size " + array.Length + ") cannot contain " + Count + " items on index " + arrayIndex);
+            foreach (var item in _enumerable)
+            {
+                array[arrayIndex++] = item;
+            }
+        }
+
         #region Unsupported methods
         public void Add(T item)
         {
@@ -43,11 +53,6 @@ namespace SharpFileSystem.Collections
         }
 
         public void Clear()
-        {
-            throw new NotSupportedException();
-        }
-
-        public void CopyTo(T[] array, int arrayIndex)
         {
             throw new NotSupportedException();
         }

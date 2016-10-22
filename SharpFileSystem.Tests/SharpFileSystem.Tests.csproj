@@ -37,6 +37,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\EnumerableCollectionTests.cs" />
     <Compile Include="FileSystemPathTest.cs" />
     <Compile Include="AssertExtensions.cs" />
     <Compile Include="FileSystems\EntityMoverRegistrationTest.cs" />
