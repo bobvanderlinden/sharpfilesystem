@@ -16,9 +16,21 @@ namespace SharpFileSystem.SharpZipLib
             return new SharpZipLibFileSystem(new ZipFile(s));
         }
 
+        public static SharpZipLibFileSystem Open(Stream s,string password)
+        {
+            return new SharpZipLibFileSystem(new ZipFile(s){Password = password});
+        }
+
         public static SharpZipLibFileSystem Create(Stream s)
         {
             return new SharpZipLibFileSystem(ZipFile.Create(s));
+        }
+
+        public static SharpZipLibFileSystem Create(Stream s,string password)
+        {
+            var zipFile = ZipFile.Create(s);
+            zipFile.Password = password;
+            return new SharpZipLibFileSystem(zipFile);
         }
 
         private SharpZipLibFileSystem(ZipFile zipFile)
