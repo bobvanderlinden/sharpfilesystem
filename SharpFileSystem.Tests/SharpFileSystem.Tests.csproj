@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -44,6 +44,7 @@
     <Compile Include="FileSystems\MemoryFileSystemTest.cs" />
     <Compile Include="FileSystems\PhysicalFileSystemTest.cs" />
     <Compile Include="SharpZipLib\SharpZipLibFileSystemTest.cs" />
+    <Compile Include="SharpZipLib\SharpZipLibFileSystemWithPasswordTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
