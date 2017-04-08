@@ -57,7 +57,6 @@ namespace SharpFileSystem.Tests.SharpZipLib
 
         private readonly FileSystemPath directoryPath = FileSystemPath.Parse("/directory/");
         private readonly FileSystemPath textfileAPath = FileSystemPath.Parse("/textfileA.txt");
-        private readonly FileSystemPath zipfileAPath = FileSystemPath.Parse("/internalzip.zip");
         private readonly FileSystemPath fileInDirectoryPath = FileSystemPath.Parse("/directory/fileInDirectory.txt");
         
         [Test]
