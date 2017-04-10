@@ -15,13 +15,14 @@ namespace SharpFileSystem.Tests.SharpZipLib
     {
         private Stream zipStream;
         private SharpZipLibFileSystem fileSystem;
-
+        private MemoryStream memoryStream;
         [OneTimeSetUp]
         public void Initialize()
         {
-            var memoryStream = new MemoryStream();
+            memoryStream = new MemoryStream();
             zipStream = memoryStream;
             var zipOutput = new ZipOutputStream(zipStream);
+            zipOutput.UseZip64 = UseZip64.Off;
 
             var fileContentString = "this is a file";
             var fileContentBytes = Encoding.ASCII.GetBytes(fileContentString);
@@ -77,6 +78,59 @@ namespace SharpFileSystem.Tests.SharpZipLib
             Assert.IsFalse(fileSystem.Exists(FileSystemPath.Parse("/nonExistingFile")));
             Assert.IsFalse(fileSystem.Exists(FileSystemPath.Parse("/nonExistingDirectory/")));
             Assert.IsFalse(fileSystem.Exists(FileSystemPath.Parse("/directory/nonExistingFileInDirectory")));
+        }
+
+        [Test]
+        public void CanCreateFileTest()
+        {
+            var text = "recent text";
+            var textBytes = Encoding.ASCII.GetBytes(text);
+            var fsp = FileSystemPath.Parse("/mostrecentfile.txt");
+            var fs = fileSystem.CreateFile(fsp, textBytes);
+            fs.Close();
+            Assert.IsTrue(fileSystem.Exists(fsp));
+
+            fs = fileSystem.OpenFile(fsp, FileAccess.Read);
+            var fsText = fs.ReadAllText();
+
+            Assert.IsTrue(fsText.Equals(text));
+
+            fileSystem.Delete(fsp);
+        }
+
+        [Test]
+        public void EmbeddedZipTest()
+        {
+            var lms = new MemoryStream();
+            var lzs = lms;
+            var zipOutput = new ZipOutputStream(lzs);
+            zipOutput.UseZip64 = UseZip64.Off;
+
+            var fileContentString = "this is a file";
+            var fileContentBytes = Encoding.ASCII.GetBytes(fileContentString);
+            zipOutput.PutNextEntry(new ZipEntry("textfileA.txt")
+            {
+                Size = fileContentBytes.Length
+            });
+            zipOutput.Write(fileContentBytes);
+            zipOutput.PutNextEntry(new ZipEntry("directory/fileInDirectory.txt"));
+            zipOutput.Finish();
+
+            lms.Position = 0;
+
+            var zipBytes = lzs.ReadAllBytes();
+            var fsp = FileSystemPath.Parse("/mostrecentfile.zip");
+            var fs = fileSystem.CreateFile(fsp, zipBytes);
+            fs.Close();
+            Assert.IsTrue(fileSystem.Exists(fsp));
+
+            var zipFile = fileSystem.OpenFile(fsp, FileAccess.Read);
+
+            var zipFileSystem = SharpZipLibFileSystem.Open(zipFile);
+
+            Assert.IsNotNull(zipFileSystem);
+            //cleanup so we don't affect other unit tests
+            fileSystem.Delete(fsp);
         }
     }
 }
