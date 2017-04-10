@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -43,12 +43,17 @@
     <Compile Include="FileSystems\EntityMoverRegistrationTest.cs" />
     <Compile Include="FileSystems\MemoryFileSystemTest.cs" />
     <Compile Include="FileSystems\PhysicalFileSystemTest.cs" />
+    <Compile Include="NetZipArchive\NetZipArchiveFileSystemTest.cs" />
     <Compile Include="SharpZipLib\SharpZipLibFileSystemTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharpFileSystem.ZipArchive\SharpFileSystem.NetZipArchive.csproj">
+      <Project>{8d44f07f-a1f8-4544-8eef-b2fd99d0fba2}</Project>
+      <Name>SharpFileSystem.NetZipArchive</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpFileSystem\SharpFileSystem.csproj">
       <Project>{3C4D07BA-23B5-4A63-92CF-F3BF892B7329}</Project>
       <Name>SharpFileSystem</Name>
