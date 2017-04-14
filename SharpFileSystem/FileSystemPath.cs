@@ -139,7 +139,7 @@ namespace SharpFileSystem
         [Pure]
         public bool IsChildOf(FileSystemPath path)
         {
-            return path.IsParentOf(this);
+            return path.IsParentOf(this) || path.Equals(this);
         }
 
         [Pure]
