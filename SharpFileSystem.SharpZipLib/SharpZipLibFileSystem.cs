@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using ICSharpCode.SharpZipLib.Zip;
 using SharpFileSystem.FileSystems;
+using SharpFileSystem.IO;
 
 namespace SharpFileSystem.SharpZipLib
 {
@@ -78,9 +79,29 @@ namespace SharpFileSystem.SharpZipLib
 
         public Stream CreateFile(FileSystemPath path)
         {
+            return CreateFile(path,null);
+        }
+        public Stream CreateFile(FileSystemPath path, byte[] data)
+        {
+            BeginUpdate();
             var entry = new MemoryZipEntry();
             ZipFile.Add(entry, ToEntryPath(path));
-            return entry.GetSource();
+            var s = entry.GetSource();
+
+            if (data!=null) s.Write(data);
+
+            EndUpdate();
+            return s;
+        }
+        private void BeginUpdate()
+        {
+            if (!ZipFile.IsUpdating)
+                ZipFile.BeginUpdate();
+        }
+        private void EndUpdate()
+        {
+            if (ZipFile.IsUpdating)
+                ZipFile.CommitUpdate();
         }
 
         public Stream OpenFile(FileSystemPath path, FileAccess access)
@@ -92,12 +113,16 @@ namespace SharpFileSystem.SharpZipLib
 
         public void CreateDirectory(FileSystemPath path)
         {
+            BeginUpdate();
             ZipFile.AddDirectory(ToEntryPath(path));
+            EndUpdate();
         }
 
         public void Delete(FileSystemPath path)
         {
+            BeginUpdate();
             ZipFile.Delete(ToEntryPath(path));
+            EndUpdate();
         }
 
         public class MemoryZipEntry: MemoryFileSystem.MemoryFile, IStaticDataSource
