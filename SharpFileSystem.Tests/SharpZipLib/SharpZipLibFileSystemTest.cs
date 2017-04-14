@@ -95,41 +95,7 @@ namespace SharpFileSystem.Tests.SharpZipLib
 
             Assert.IsTrue(fsText.Equals(text));
 
-            fileSystem.Delete(fsp);
-        }
-
-        [Test]
-        public void EmbeddedZipTest()
-        {
-            var lms = new MemoryStream();
-            var lzs = lms;
-            var zipOutput = new ZipOutputStream(lzs);
-            zipOutput.UseZip64 = UseZip64.Off;
-
-            var fileContentString = "this is a file";
-            var fileContentBytes = Encoding.ASCII.GetBytes(fileContentString);
-            zipOutput.PutNextEntry(new ZipEntry("textfileA.txt")
-            {
-                Size = fileContentBytes.Length
-            });
-            zipOutput.Write(fileContentBytes);
-            zipOutput.PutNextEntry(new ZipEntry("directory/fileInDirectory.txt"));
-            zipOutput.Finish();
-
-            lms.Position = 0;
-
-            var zipBytes = lzs.ReadAllBytes();
-            var fsp = FileSystemPath.Parse("/mostrecentfile.zip");
-            var fs = fileSystem.CreateFile(fsp, zipBytes);
-            fs.Close();
-            Assert.IsTrue(fileSystem.Exists(fsp));
-
-            var zipFile = fileSystem.OpenFile(fsp, FileAccess.Read);
-
-            var zipFileSystem = SharpZipLibFileSystem.Open(zipFile);
-
-            Assert.IsNotNull(zipFileSystem);
-            //cleanup so we don't affect other unit tests
+            //delete the file we created, so as not to intefere with the other tests.
             fileSystem.Delete(fsp);
         }
     }
