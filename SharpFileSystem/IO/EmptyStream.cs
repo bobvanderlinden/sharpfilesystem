@@ -2,7 +2,7 @@ using System.IO;
 
 namespace SharpFileSystem.IO
 {
-    public class EmptyStream: Stream
+    public class EmptyStream : Stream
     {
         private static EmptyStream _instance;
         public static EmptyStream Instance
@@ -25,19 +25,19 @@ namespace SharpFileSystem.IO
             get { return true; }
         }
 
-        public override void Flush()
-        {
-        }
-
         public override long Length
         {
             get { return 0; }
         }
 
-        public override long Position
+        public override long Position { get; set; }
+
+        public override void Close()
         {
-            get { return 0; }
-            set { }
+        }
+
+        public override void Flush()
+        {
         }
 
         public override int Read(byte[] buffer, int offset, int count)
@@ -55,10 +55,6 @@ namespace SharpFileSystem.IO
         }
 
         public override void Write(byte[] buffer, int offset, int count)
-        {
-        }
-
-        public override void Close()
         {
         }
     }

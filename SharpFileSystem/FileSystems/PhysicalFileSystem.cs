@@ -19,6 +19,59 @@ namespace SharpFileSystem.FileSystems
 
         public string PhysicalRoot { get; private set; }
 
+        public void CreateDirectory(FilePath path)
+        {
+            if (!path.IsDirectory)
+                throw new ArgumentException("The specified path is not a directory.", "path");
+            System.IO.Directory.CreateDirectory(GetPhysicalPath(path));
+        }
+
+        public Stream CreateFile(FilePath path)
+        {
+            if (!path.IsFile)
+                throw new ArgumentException("The specified path is not a file.", "path");
+            return System.IO.File.Create(GetPhysicalPath(path));
+        }
+
+        public void CreateTextFile(FilePath path, string contents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(FilePath path)
+        {
+            if (path.IsFile)
+                System.IO.File.Delete(GetPhysicalPath(path));
+            else
+                System.IO.Directory.Delete(GetPhysicalPath(path), true);
+        }
+
+        public void Dispose()
+        {
+        }
+
+        public bool Exists(FilePath path)
+        {
+            return path.IsFile ? System.IO.File.Exists(GetPhysicalPath(path)) : System.IO.Directory.Exists(GetPhysicalPath(path));
+        }
+
+        public FilePath GetCurrentDirectory()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<FilePath> GetEntities(FilePath path)
+        {
+            string physicalPath = GetPhysicalPath(path);
+            string[] directories = System.IO.Directory.GetDirectories(physicalPath);
+            string[] files = System.IO.Directory.GetFiles(physicalPath);
+            var virtualDirectories =
+                directories.Select(p => GetVirtualDirectoryPath(p));
+            var virtualFiles =
+                files.Select(p => GetVirtualFilePath(p));
+            return new EnumerableCollection<FilePath>(virtualDirectories.Concat(virtualFiles), directories.Length + files.Length);
+        }
+
         public string GetPhysicalPath(FilePath path)
         {
             return Path.Combine(PhysicalRoot, path.ToString().Remove(0, 1).Replace(FilePath.DirectorySeparator, Path.DirectorySeparatorChar));
@@ -42,54 +95,16 @@ namespace SharpFileSystem.FileSystems
             return FilePath.Parse(virtualPath);
         }
 
-        public void CreateDirectory(FilePath path)
-        {
-            if (!path.IsDirectory)
-                throw new ArgumentException("The specified path is not a directory.", "path");
-            System.IO.Directory.CreateDirectory(GetPhysicalPath(path));
-        }
-
-        public Stream CreateFile(FilePath path)
-        {
-            if (!path.IsFile)
-                throw new ArgumentException("The specified path is not a file.", "path");
-            return System.IO.File.Create(GetPhysicalPath(path));
-        }
-
-        public void Delete(FilePath path)
-        {
-            if (path.IsFile)
-                System.IO.File.Delete(GetPhysicalPath(path));
-            else
-                System.IO.Directory.Delete(GetPhysicalPath(path), true);
-        }
-
-        public void Dispose()
-        {
-        }
-
-        public bool Exists(FilePath path)
-        {
-            return path.IsFile ? System.IO.File.Exists(GetPhysicalPath(path)) : System.IO.Directory.Exists(GetPhysicalPath(path));
-        }
-
-        public ICollection<FilePath> GetEntities(FilePath path)
-        {
-            string physicalPath = GetPhysicalPath(path);
-            string[] directories = System.IO.Directory.GetDirectories(physicalPath);
-            string[] files = System.IO.Directory.GetFiles(physicalPath);
-            var virtualDirectories =
-                directories.Select(p => GetVirtualDirectoryPath(p));
-            var virtualFiles =
-                files.Select(p => GetVirtualFilePath(p));
-            return new EnumerableCollection<FilePath>(virtualDirectories.Concat(virtualFiles), directories.Length + files.Length);
-        }
-
         public Stream OpenFile(FilePath path, FileAccess access)
         {
             if (!path.IsFile)
                 throw new ArgumentException("The specified path is not a file.", "path");
             return System.IO.File.Open(GetPhysicalPath(path), FileMode.Open, access);
+        }
+
+        public string ReadAllText(FilePath path)
+        {
+            throw new NotImplementedException();
         }
     }
 }

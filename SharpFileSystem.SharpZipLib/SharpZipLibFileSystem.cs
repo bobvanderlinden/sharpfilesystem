@@ -38,6 +38,11 @@ namespace SharpFileSystem.SharpZipLib
             return entry.GetSource();
         }
 
+        public void CreateTextFile(FilePath path, string contents)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Delete(FilePath path)
         {
             ZipFile.Delete(ToEntryPath(path));
@@ -59,6 +64,11 @@ namespace SharpFileSystem.SharpZipLib
                 .Any(entryPath => entryPath.IsChildOf(path));
         }
 
+        public FilePath GetCurrentDirectory()
+        {
+            throw new NotImplementedException();
+        }
+
         public ICollection<FilePath> GetEntities(FilePath path)
         {
             return GetZipEntries()
@@ -77,6 +87,11 @@ namespace SharpFileSystem.SharpZipLib
             if (access != FileAccess.Read)
                 throw new NotSupportedException();
             return ZipFile.GetInputStream(ToEntry(path));
+        }
+
+        public string ReadAllText(FilePath path)
+        {
+            throw new NotImplementedException();
         }
 
         protected IEnumerable<ZipEntry> GetZipEntries()

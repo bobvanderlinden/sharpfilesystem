@@ -36,6 +36,11 @@ namespace SharpFileSystem.FileSystems
             return fs.CreateFile(path);
         }
 
+        public void CreateTextFile(FilePath path, string contents)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Delete(FilePath path)
         {
             foreach (var fs in FileSystems.Where(fs => fs.Exists(path)))
@@ -51,6 +56,11 @@ namespace SharpFileSystem.FileSystems
         public bool Exists(FilePath path)
         {
             return FileSystems.Any(fs => fs.Exists(path));
+        }
+
+        public FilePath GetCurrentDirectory()
+        {
+            throw new NotImplementedException();
         }
 
         public ICollection<FilePath> GetEntities(FilePath path)
@@ -76,6 +86,11 @@ namespace SharpFileSystem.FileSystems
             if (fs == null)
                 throw new FileNotFoundException();
             return fs.OpenFile(path, access);
+        }
+
+        public string ReadAllText(FilePath path)
+        {
+            throw new NotImplementedException();
         }
     }
 }

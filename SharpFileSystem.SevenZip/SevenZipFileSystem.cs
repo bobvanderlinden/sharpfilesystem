@@ -50,6 +50,11 @@ namespace SharpFileSystem.SevenZip
             throw new NotSupportedException();
         }
 
+        public void CreateTextFile(FilePath path, string contents)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Delete(FilePath path)
         {
             throw new NotSupportedException();
@@ -63,6 +68,11 @@ namespace SharpFileSystem.SevenZip
         public bool Exists(FilePath path)
         {
             return _entities.Contains(path);
+        }
+
+        public FilePath GetCurrentDirectory()
+        {
+            throw new NotImplementedException();
         }
 
         public ICollection<FilePath> GetEntities(FilePath path)
@@ -97,6 +107,11 @@ namespace SharpFileSystem.SevenZip
                                                  s.Close();
                                              });
             return s;
+        }
+
+        public string ReadAllText(FilePath path)
+        {
+            throw new NotImplementedException();
         }
     }
 }

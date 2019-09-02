@@ -7,17 +7,17 @@ using System.Threading;
 namespace SharpFileSystem.IO
 {
     // CircularBuffer from http://circularbuffer.codeplex.com/.
-    public class CircularBuffer<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnumerable
+    public class CircularBuffer<T> : ICollection<T>, ICollection
     {
-        private int capacity;
-        private int size;
-        private int head;
-        private int tail;
         private T[] buffer;
+        private int capacity;
+        private int head;
+        private int size;
 
         [NonSerialized]
         private object syncRoot;
 
+        private int tail;
         public CircularBuffer(int capacity)
             : this(capacity, false)
         {
@@ -69,6 +69,13 @@ namespace SharpFileSystem.IO
             get { return size; }
         }
 
+        public void Clear()
+        {
+            size = 0;
+            head = 0;
+            tail = 0;
+        }
+
         public bool Contains(T item)
         {
             int bufferIndex = head;
@@ -88,48 +95,29 @@ namespace SharpFileSystem.IO
             return false;
         }
 
-        public void Clear()
+        public void CopyTo(T[] array)
         {
-            size = 0;
-            head = 0;
-            tail = 0;
+            CopyTo(array, 0);
         }
 
-        public int Put(T[] src)
+        public void CopyTo(T[] array, int arrayIndex)
         {
-            return Put(src, 0, src.Length);
+            CopyTo(0, array, arrayIndex, size);
         }
 
-        public int Put(T[] src, int offset, int count)
+        public void CopyTo(int index, T[] array, int arrayIndex, int count)
         {
-            int realCount = AllowOverflow ? count : Math.Min(count, capacity - size);
-            int srcIndex = offset;
-            for (int i = 0; i < realCount; i++, tail++, srcIndex++)
+            if (count > size)
+                throw new ArgumentOutOfRangeException("count",
+                    "count cannot be greater than the buffer size.");
+
+            int bufferIndex = head;
+            for (int i = 0; i < count; i++, bufferIndex++, arrayIndex++)
             {
-                if (tail == capacity)
-                    tail = 0;
-                buffer[tail] = src[srcIndex];
+                if (bufferIndex == capacity)
+                    bufferIndex = 0;
+                array[arrayIndex] = buffer[bufferIndex];
             }
-            size = Math.Min(size + realCount, capacity);
-            return realCount;
-        }
-
-        public void Put(T item)
-        {
-            if (!AllowOverflow && size == capacity)
-                throw new InternalBufferOverflowException("Buffer is full.");
-
-            buffer[tail] = item;
-            if (tail++ == capacity)
-                tail = 0;
-            size++;
-        }
-
-        public void Skip(int count)
-        {
-            head += count;
-            if (head >= capacity)
-                head -= capacity;
         }
 
         public T[] Get(int count)
@@ -170,29 +158,9 @@ namespace SharpFileSystem.IO
             return item;
         }
 
-        public void CopyTo(T[] array)
+        public T[] GetBuffer()
         {
-            CopyTo(array, 0);
-        }
-
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            CopyTo(0, array, arrayIndex, size);
-        }
-
-        public void CopyTo(int index, T[] array, int arrayIndex, int count)
-        {
-            if (count > size)
-                throw new ArgumentOutOfRangeException("count",
-                    "count cannot be greater than the buffer size.");
-
-            int bufferIndex = head;
-            for (int i = 0; i < count; i++, bufferIndex++, arrayIndex++)
-            {
-                if (bufferIndex == capacity)
-                    bufferIndex = 0;
-                array[arrayIndex] = buffer[bufferIndex];
-            }
+            return buffer;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -207,9 +175,41 @@ namespace SharpFileSystem.IO
             }
         }
 
-        public T[] GetBuffer()
+        public int Put(T[] src)
         {
-            return buffer;
+            return Put(src, 0, src.Length);
+        }
+
+        public int Put(T[] src, int offset, int count)
+        {
+            int realCount = AllowOverflow ? count : Math.Min(count, capacity - size);
+            int srcIndex = offset;
+            for (int i = 0; i < realCount; i++, tail++, srcIndex++)
+            {
+                if (tail == capacity)
+                    tail = 0;
+                buffer[tail] = src[srcIndex];
+            }
+            size = Math.Min(size + realCount, capacity);
+            return realCount;
+        }
+
+        public void Put(T item)
+        {
+            if (!AllowOverflow && size == capacity)
+                throw new InternalBufferOverflowException("Buffer is full.");
+
+            buffer[tail] = item;
+            if (tail++ == capacity)
+                tail = 0;
+            size++;
+        }
+
+        public void Skip(int count)
+        {
+            head += count;
+            if (head >= capacity)
+                head -= capacity;
         }
 
         public T[] ToArray()
@@ -218,8 +218,6 @@ namespace SharpFileSystem.IO
             CopyTo(dst);
             return dst;
         }
-
-        #region ICollection<T> Members
 
         int ICollection<T>.Count
         {
@@ -245,18 +243,10 @@ namespace SharpFileSystem.IO
             return true;
         }
 
-        #endregion
-
-        #region IEnumerable<T> Members
-
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return GetEnumerator();
         }
-
-        #endregion
-
-        #region ICollection Members
 
         int ICollection.Count
         {
@@ -283,15 +273,9 @@ namespace SharpFileSystem.IO
             CopyTo((T[])array, arrayIndex);
         }
 
-        #endregion
-
-        #region IEnumerable Members
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return (IEnumerator)GetEnumerator();
         }
-
-        #endregion
     }
 }

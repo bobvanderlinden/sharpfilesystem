@@ -27,6 +27,11 @@ namespace SharpFileSystem.FileSystems
             return FileSystem.CreateFile(AppendRoot(path));
         }
 
+        public void CreateTextFile(FilePath path, string contents)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void Delete(FilePath path)
         {
             FileSystem.Delete(AppendRoot(path));
@@ -42,6 +47,11 @@ namespace SharpFileSystem.FileSystems
             return FileSystem.Exists(AppendRoot(path));
         }
 
+        public FilePath GetCurrentDirectory()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public ICollection<FilePath> GetEntities(FilePath path)
         {
             var paths = FileSystem.GetEntities(AppendRoot(path));
@@ -51,6 +61,11 @@ namespace SharpFileSystem.FileSystems
         public Stream OpenFile(FilePath path, FileAccess access)
         {
             return FileSystem.OpenFile(AppendRoot(path), access);
+        }
+
+        public string ReadAllText(FilePath path)
+        {
+            throw new System.NotImplementedException();
         }
 
         protected FilePath AppendRoot(FilePath path)

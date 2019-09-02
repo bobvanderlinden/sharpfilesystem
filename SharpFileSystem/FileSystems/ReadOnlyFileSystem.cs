@@ -25,6 +25,11 @@ namespace SharpFileSystem.FileSystems
             throw new InvalidOperationException("This is a read-only filesystem.");
         }
 
+        public void CreateTextFile(FilePath path, string contents)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Delete(FilePath path)
         {
             throw new InvalidOperationException("This is a read-only filesystem.");
@@ -40,6 +45,11 @@ namespace SharpFileSystem.FileSystems
             return FileSystem.Exists(path);
         }
 
+        public FilePath GetCurrentDirectory()
+        {
+            throw new NotImplementedException();
+        }
+
         public ICollection<FilePath> GetEntities(FilePath path)
         {
             return FileSystem.GetEntities(path);
@@ -50,6 +60,11 @@ namespace SharpFileSystem.FileSystems
             if (access != FileAccess.Read)
                 throw new InvalidOperationException("This is a read-only filesystem.");
             return FileSystem.OpenFile(path, access);
+        }
+
+        public string ReadAllText(FilePath path)
+        {
+            throw new NotImplementedException();
         }
     }
 }

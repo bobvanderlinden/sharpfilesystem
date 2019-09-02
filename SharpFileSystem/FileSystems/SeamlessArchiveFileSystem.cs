@@ -10,7 +10,7 @@ namespace SharpFileSystem.FileSystems
         public static readonly char ArchiveDirectorySeparator = '#';
         private FileSystemUsage _rootUsage;
         private IDictionary<File, FileSystemUsage> _usedArchives = new Dictionary<File, FileSystemUsage>();
-        public SeamlessArchiveFileSystem(IFileSystem fileSystem)
+        protected SeamlessArchiveFileSystem(IFileSystem fileSystem)
         {
             FileSystem = fileSystem;
             _rootUsage = new FileSystemUsage()
@@ -22,6 +22,34 @@ namespace SharpFileSystem.FileSystems
         }
 
         public IFileSystem FileSystem { get; private set; }
+
+        public void CreateDirectory(FilePath path)
+        {
+            using (var r = Refer(path))
+            {
+                r.FileSystem.CreateDirectory(GetRelativePath(path));
+            }
+        }
+
+        public System.IO.Stream CreateFile(FilePath path)
+        {
+            var r = Refer(path);
+            var s = r.FileSystem.CreateFile(GetRelativePath(path));
+            return new SafeReferenceStream(s, r);
+        }
+
+        public void CreateTextFile(FilePath path, string contents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(FilePath path)
+        {
+            using (var r = Refer(path))
+            {
+                r.FileSystem.Delete(GetRelativePath(path));
+            }
+        }
 
         public void Dispose()
         {
@@ -37,6 +65,11 @@ namespace SharpFileSystem.FileSystems
                 var fileSystem = r.FileSystem;
                 return fileSystem.Exists(GetRelativePath(path));
             }
+        }
+
+        public FilePath GetCurrentDirectory()
+        {
+            throw new NotImplementedException();
         }
 
         public ICollection<FilePath> GetEntities(FilePath path)
@@ -67,6 +100,11 @@ namespace SharpFileSystem.FileSystems
             var r = Refer(path);
             var s = r.FileSystem.OpenFile(GetRelativePath(path), access);
             return new SafeReferenceStream(s, r);
+        }
+
+        public string ReadAllText(FilePath path)
+        {
+            throw new NotImplementedException();
         }
 
         public void UnuseFileSystem(FileSystemReference reference)
@@ -176,29 +214,6 @@ namespace SharpFileSystem.FileSystems
             if (sindex < 0)
                 return path;
             return FilePath.Parse(s.Substring(sindex + 1));
-        }
-
-        public void CreateDirectory(FilePath path)
-        {
-            using (var r = Refer(path))
-            {
-                r.FileSystem.CreateDirectory(GetRelativePath(path));
-            }
-        }
-
-        public System.IO.Stream CreateFile(FilePath path)
-        {
-            var r = Refer(path);
-            var s = r.FileSystem.CreateFile(GetRelativePath(path));
-            return new SafeReferenceStream(s, r);
-        }
-
-        public void Delete(FilePath path)
-        {
-            using (var r = Refer(path))
-            {
-                r.FileSystem.Delete(GetRelativePath(path));
-            }
         }
 
         public class DummyDisposable : IDisposable

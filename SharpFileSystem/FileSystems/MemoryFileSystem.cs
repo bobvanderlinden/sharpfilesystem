@@ -71,6 +71,7 @@ namespace SharpFileSystem.FileSystems
 
         public void Dispose()
         {
+            // ignored
         }
 
         public bool Exists(FilePath path)

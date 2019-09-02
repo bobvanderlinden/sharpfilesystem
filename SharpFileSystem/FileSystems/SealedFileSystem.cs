@@ -22,6 +22,11 @@ namespace SharpFileSystem.FileSystems
             return Parent.CreateFile(path);
         }
 
+        public void CreateTextFile(FilePath path, string contents)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void Delete(FilePath path)
         {
             Parent.Delete(path);
@@ -37,6 +42,11 @@ namespace SharpFileSystem.FileSystems
             return Parent.Exists(path);
         }
 
+        public FilePath GetCurrentDirectory()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public ICollection<FilePath> GetEntities(FilePath path)
         {
             return Parent.GetEntities(path);
@@ -45,6 +55,11 @@ namespace SharpFileSystem.FileSystems
         public Stream OpenFile(FilePath path, FileAccess access)
         {
             return Parent.OpenFile(path, access);
+        }
+
+        public string ReadAllText(FilePath path)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

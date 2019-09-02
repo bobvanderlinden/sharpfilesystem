@@ -2,9 +2,14 @@ using System.IO;
 
 namespace SharpFileSystem.IO
 {
-    public class CleanCloseStream: Stream
+    public class CleanCloseStream : Stream
     {
         private Stream _stream;
+
+        public CleanCloseStream(Stream stream)
+        {
+            _stream = stream;
+        }
 
         public override bool CanRead
         {
@@ -32,9 +37,14 @@ namespace SharpFileSystem.IO
             set { _stream.Position = value; }
         }
 
-        public CleanCloseStream(Stream stream)
+        public override void Close()
         {
-            _stream = stream;
+            _stream.Close();
+        }
+
+        public override void Flush()
+        {
+            _stream.Flush();
         }
 
         public override int Read(byte[] buffer, int offset, int count)
@@ -55,19 +65,6 @@ namespace SharpFileSystem.IO
         public override void Write(byte[] buffer, int offset, int count)
         {
             _stream.Write(buffer, offset, count);
-        }
-
-        public override void Flush()
-        {
-            _stream.Flush();
-        }
-
-        public override void Close()
-        {
-            while (_stream.ReadByte() != -1)
-            {
-            }
-            _stream.Close();
         }
     }
 }

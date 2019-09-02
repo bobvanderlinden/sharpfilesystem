@@ -6,25 +6,7 @@ namespace SharpFileSystem.Collections
 {
     public class TypeDictionary<T> : ITypeDictionary<T>, IServiceProvider
     {
-        #region Private Fields
-        IDictionary<Type, ICollection<T>> types = new Dictionary<Type, ICollection<T>>();
-        #endregion
-        #region Private Helper Methods
-        private ICollection<T> GetBaseCollection()
-        {
-            return EnsureType(GetBaseType());
-        }
-
-        private Type GetBaseType()
-        {
-            return typeof(T);
-        }
-
-        private void ValidateType(Type type)
-        {
-            if (!GetBaseType().IsAssignableFrom(type))
-                throw new ArgumentException("The specified type is not a subtype of '" + GetBaseType().ToString() + "'.", "type");
-        }
+        private IDictionary<Type, ICollection<T>> types = new Dictionary<Type, ICollection<T>>();
 
         private ICollection<T> AddType(Type type)
         {
@@ -41,21 +23,36 @@ namespace SharpFileSystem.Collections
             return AddType(type);
         }
 
+        private ICollection<T> GetBaseCollection()
+        {
+            return EnsureType(GetBaseType());
+        }
+
+        private Type GetBaseType()
+        {
+            return typeof(T);
+        }
+
         private IEnumerable<Type> GetSubTypes(Type type)
         {
-            Type currentType = type;
+            var currentType = type;
             while (currentType != GetBaseType().BaseType && currentType != null)
             {
                 yield return currentType;
                 currentType = currentType.BaseType;
             }
-            foreach (Type interfaceType in type.GetInterfaces())
+            foreach (var interfaceType in type.GetInterfaces())
             {
                 yield return interfaceType;
             }
         }
-        #endregion
-        #region Public Transformation Methods
+
+        private void ValidateType(Type type)
+        {
+            if (!GetBaseType().IsAssignableFrom(type))
+                throw new ArgumentException("The specified type is not a subtype of '" + GetBaseType().ToString() + "'.", "type");
+        }
+
         public void Add(T item)
         {
             if (item == null)
@@ -68,6 +65,11 @@ namespace SharpFileSystem.Collections
                 if (!itemsOfType.Contains(item))
                     itemsOfType.Add(item);
             }
+        }
+
+        public void Clear()
+        {
+            types.Clear();
         }
 
         public bool Remove(T item)
@@ -91,18 +93,21 @@ namespace SharpFileSystem.Collections
             return true;
         }
 
-        public void Clear()
+        public int Count
         {
-            types.Clear();
+            get { return GetBaseCollection().Count; }
         }
-        #endregion
-        #region Public Query Methods
+
+        bool ICollection<T>.IsReadOnly
+        {
+            get { return false; }
+        }
+
         public IEnumerable<T> this[Type type]
         {
             get { return Get(type); }
         }
 
-        #region Get Methods
         public IEnumerable<T> Get(Type type)
         {
             ICollection<T> itemsOfType;
@@ -126,9 +131,7 @@ namespace SharpFileSystem.Collections
                 }
             }
         }
-        #endregion
 
-        #region GetExplicit Methods
         public IEnumerable<T> GetExplicit(Type type)
         {
             if (type.IsAbstract)
@@ -151,9 +154,7 @@ namespace SharpFileSystem.Collections
             foreach (T item in GetExplicit(typeof(TGet)))
                 yield return (TGet)item;
         }
-        #endregion
 
-        #region GetSingle Methods
         public T GetSingle(Type type)
         {
             ICollection<T> itemsOfType;
@@ -171,9 +172,7 @@ namespace SharpFileSystem.Collections
         {
             return (TGet)(object)GetSingle(typeof(TGet));
         }
-        #endregion
 
-        #region GetSingleExplicit Methods
         public T GetSingleExplicit(Type type)
         {
             if (type.IsAbstract)
@@ -196,9 +195,7 @@ namespace SharpFileSystem.Collections
         {
             return (TGet)GetSingleExplicit(typeof(TGet));
         }
-        #endregion
 
-        #region Contains Methods
         public bool Contains(Type type)
         {
             if (type == null)
@@ -221,24 +218,12 @@ namespace SharpFileSystem.Collections
                 return itemsOfType.Contains(item);
             return false;
         }
-        #endregion
-
-        public int Count
-        {
-            get { return GetBaseCollection().Count; }
-        }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
             GetBaseCollection().CopyTo(array, arrayIndex);
         }
 
-        bool ICollection<T>.IsReadOnly
-        {
-            get { return false; }
-        }
-
-        #region GetEnumerator Methods
         public IEnumerator<T> GetEnumerator()
         {
             return GetBaseCollection().GetEnumerator();
@@ -248,13 +233,10 @@ namespace SharpFileSystem.Collections
         {
             return GetBaseCollection().GetEnumerator();
         }
-        #endregion
-        #endregion
-        #region IServiceProvider Members
+
         object IServiceProvider.GetService(Type serviceType)
         {
             return Get(serviceType);
         }
-        #endregion
     }
 }
