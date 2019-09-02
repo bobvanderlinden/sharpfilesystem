@@ -6,14 +6,14 @@ namespace SharpFileSystem
 {
     public class StandardEntityMover : IEntityMover
     {
-        public int BufferSize { get; set; }
-
         public StandardEntityMover()
         {
             BufferSize = 65536;
         }
 
-        public void Move(IFileSystem source, FileSystemPath sourcePath, IFileSystem destination, FileSystemPath destinationPath)
+        public int BufferSize { get; set; }
+
+        public void Move(IFileSystem source, FilePath sourcePath, IFileSystem destination, FilePath destinationPath)
         {
             bool isFile;
             if ((isFile = sourcePath.IsFile) != destinationPath.IsFile)

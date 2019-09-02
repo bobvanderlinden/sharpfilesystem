@@ -11,27 +11,21 @@ namespace SharpFileSystem.Tests.FileSystems
     [TestFixture]
     public class PhysicalFileSystemTest
     {
-        string Root { get; set; }
-        PhysicalFileSystem FileSystem { get; set; }
-        string AbsoluteFileName { get; set; }
-
-        string FileName { get; }
-        FileSystemPath FileNamePath { get; }
-
         public PhysicalFileSystemTest()
         {
             FileName = "x";
-            FileNamePath = FileSystemPath.Root.AppendFile(FileName);
+            FileNamePath = FilePath.Root.AppendFile(FileName);
         }
 
-        [SetUp]
-        public void Initialize()
-        {
-            Root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
-            System.IO.Directory.CreateDirectory(Root);
-            AbsoluteFileName = Path.Combine(Root, FileName);
-            FileSystem = new PhysicalFileSystem(Root);
-        }
+        private string AbsoluteFileName { get; set; }
+
+        private string FileName { get; }
+
+        private FilePath FileNamePath { get; }
+
+        private PhysicalFileSystem FileSystem { get; set; }
+
+        private string Root { get; set; }
 
         [TearDown]
         public void Cleanup()
@@ -70,8 +64,27 @@ namespace SharpFileSystem.Tests.FileSystems
                     // trim to actual length.
                     readContent.Take(content.Length).ToArray());
 
-                // Trying to read beyond end of file should just return 0.
+                // Trying to read beyond end of file should
+                // just return 0.
                 Assert.AreEqual(0, stream.Read(readContent, 0, readContent.Length));
+            }
+        }
+
+        [Test]
+        public void CreateFile_Empty()
+        {
+            using (var stream = FileSystem.CreateFile(FileNamePath))
+            {
+            }
+
+            CollectionAssert.AreEqual(
+                new byte[] { },
+                System.IO.File.ReadAllBytes(AbsoluteFileName));
+            using (var stream = FileSystem.OpenFile(FileNamePath, FileAccess.Read))
+            {
+                CollectionAssert.AreEqual(
+                    new byte[] { },
+                    stream.ReadAllBytes());
             }
         }
 
@@ -100,22 +113,13 @@ namespace SharpFileSystem.Tests.FileSystems
             }
         }
 
-        [Test]
-        public void CreateFile_Empty()
+        [SetUp]
+        public void Initialize()
         {
-            using (var stream = FileSystem.CreateFile(FileNamePath))
-            {
-            }
-
-            CollectionAssert.AreEqual(
-                new byte[] { },
-                System.IO.File.ReadAllBytes(AbsoluteFileName));
-            using (var stream = FileSystem.OpenFile(FileNamePath, FileAccess.Read))
-            {
-                CollectionAssert.AreEqual(
-                    new byte[] { },
-                    stream.ReadAllBytes());
-            }
+            Root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            System.IO.Directory.CreateDirectory(Root);
+            AbsoluteFileName = Path.Combine(Root, FileName);
+            FileSystem = new PhysicalFileSystem(Root);
         }
     }
 }

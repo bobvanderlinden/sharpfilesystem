@@ -5,39 +5,24 @@ namespace SharpFileSystem.FileSystems
 {
     public class SealedFileSystem : IFileSystem
     {
-        private IFileSystem Parent { get; set; }
-
         public SealedFileSystem(IFileSystem parent)
         {
             Parent = parent;
         }
 
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
-        {
-            return Parent.GetEntities(path);
-        }
+        private IFileSystem Parent { get; set; }
 
-        public bool Exists(FileSystemPath path)
-        {
-            return Parent.Exists(path);
-        }
-
-        public Stream CreateFile(FileSystemPath path)
-        {
-            return Parent.CreateFile(path);
-        }
-
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
-        {
-            return Parent.OpenFile(path, access);
-        }
-
-        public void CreateDirectory(FileSystemPath path)
+        public void CreateDirectory(FilePath path)
         {
             Parent.CreateDirectory(path);
         }
 
-        public void Delete(FileSystemPath path)
+        public Stream CreateFile(FilePath path)
+        {
+            return Parent.CreateFile(path);
+        }
+
+        public void Delete(FilePath path)
         {
             Parent.Delete(path);
         }
@@ -45,6 +30,21 @@ namespace SharpFileSystem.FileSystems
         public void Dispose()
         {
             Parent.Dispose();
+        }
+
+        public bool Exists(FilePath path)
+        {
+            return Parent.Exists(path);
+        }
+
+        public ICollection<FilePath> GetEntities(FilePath path)
+        {
+            return Parent.GetEntities(path);
+        }
+
+        public Stream OpenFile(FilePath path, FileAccess access)
+        {
+            return Parent.OpenFile(path, access);
         }
     }
 }

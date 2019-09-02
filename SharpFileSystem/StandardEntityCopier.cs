@@ -5,14 +5,14 @@ namespace SharpFileSystem
 {
     public class StandardEntityCopier : IEntityCopier
     {
-        public int BufferSize { get; set; }
-
         public StandardEntityCopier()
         {
             BufferSize = 65536;
         }
 
-        public void Copy(IFileSystem source, FileSystemPath sourcePath, IFileSystem destination, FileSystemPath destinationPath)
+        public int BufferSize { get; set; }
+
+        public void Copy(IFileSystem source, FilePath sourcePath, IFileSystem destination, FilePath destinationPath)
         {
             bool isFile;
             if ((isFile = sourcePath.IsFile) != destinationPath.IsFile)

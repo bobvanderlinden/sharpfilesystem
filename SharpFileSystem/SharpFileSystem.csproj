@@ -60,7 +60,7 @@
     <Compile Include="IO\CircularBuffer.cs" />
     <Compile Include="IO\ConcatStream.cs" />
     <Compile Include="Collections\EnumerableCollection.cs" />
-    <Compile Include="FileSystemPath.cs" />
+    <Compile Include="FilePath.cs" />
     <Compile Include="IO\BoundStream.cs" />
     <Compile Include="IO\BranchStream.cs" />
     <Compile Include="IO\CleanCloseStream.cs" />

@@ -13,8 +13,48 @@ namespace SharpFileSystem.Tests.SharpZipLib
     [TestFixture]
     public class SharpZipLibFileSystemTest
     {
-        private Stream zipStream;
+        private readonly FilePath directoryPath = FilePath.Parse("/directory/");
+        private readonly FilePath fileInDirectoryPath = FilePath.Parse("/directory/fileInDirectory.txt");
+        private readonly FilePath textfileAPath = FilePath.Parse("/textfileA.txt");
         private SharpZipLibFileSystem fileSystem;
+        private Stream zipStream;
+        [OneTimeTearDown]
+        public void Cleanup()
+        {
+            fileSystem.Dispose();
+            zipStream.Dispose();
+        }
+
+        [Test]
+        public void ExistsTest()
+        {
+            Assert.IsTrue(fileSystem.Exists(FilePath.Root));
+            Assert.IsTrue(fileSystem.Exists(textfileAPath));
+            Assert.IsTrue(fileSystem.Exists(directoryPath));
+            Assert.IsTrue(fileSystem.Exists(fileInDirectoryPath));
+            Assert.IsFalse(fileSystem.Exists(FilePath.Parse("/nonExistingFile")));
+            Assert.IsFalse(fileSystem.Exists(FilePath.Parse("/nonExistingDirectory/")));
+            Assert.IsFalse(fileSystem.Exists(FilePath.Parse("/directory/nonExistingFileInDirectory")));
+        }
+
+        [Test]
+        public void GetEntitiesOfDirectoryTest()
+        {
+            CollectionAssert.AreEquivalent(new[]
+            {
+                fileInDirectoryPath
+            }, fileSystem.GetEntities(directoryPath).ToArray());
+        }
+
+        [Test]
+        public void GetEntitiesOfRootTest()
+        {
+            CollectionAssert.AreEquivalent(new[]
+            {
+                textfileAPath,
+                directoryPath
+            }, fileSystem.GetEntities(FilePath.Root).ToArray());
+        }
 
         [OneTimeSetUp]
         public void Initialize()
@@ -35,48 +75,6 @@ namespace SharpFileSystem.Tests.SharpZipLib
 
             memoryStream.Position = 0;
             fileSystem = SharpZipLibFileSystem.Open(zipStream);
-        }
-
-        [OneTimeTearDown]
-        public void Cleanup()
-        {
-            fileSystem.Dispose();
-            zipStream.Dispose();
-        }
-
-        private readonly FileSystemPath directoryPath = FileSystemPath.Parse("/directory/");
-        private readonly FileSystemPath textfileAPath = FileSystemPath.Parse("/textfileA.txt");
-        private readonly FileSystemPath fileInDirectoryPath = FileSystemPath.Parse("/directory/fileInDirectory.txt");
-
-        [Test]
-        public void GetEntitiesOfRootTest()
-        {
-            CollectionAssert.AreEquivalent(new[]
-            {
-                textfileAPath,
-                directoryPath
-            }, fileSystem.GetEntities(FileSystemPath.Root).ToArray());
-        }
-
-        [Test]
-        public void GetEntitiesOfDirectoryTest()
-        {
-            CollectionAssert.AreEquivalent(new[]
-            {
-                fileInDirectoryPath
-            }, fileSystem.GetEntities(directoryPath).ToArray());
-        }
-
-        [Test]
-        public void ExistsTest()
-        {
-            Assert.IsTrue(fileSystem.Exists(FileSystemPath.Root));
-            Assert.IsTrue(fileSystem.Exists(textfileAPath));
-            Assert.IsTrue(fileSystem.Exists(directoryPath));
-            Assert.IsTrue(fileSystem.Exists(fileInDirectoryPath));
-            Assert.IsFalse(fileSystem.Exists(FileSystemPath.Parse("/nonExistingFile")));
-            Assert.IsFalse(fileSystem.Exists(FileSystemPath.Parse("/nonExistingDirectory/")));
-            Assert.IsFalse(fileSystem.Exists(FileSystemPath.Parse("/directory/nonExistingFileInDirectory")));
         }
     }
 }

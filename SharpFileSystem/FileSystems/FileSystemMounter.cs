@@ -7,23 +7,41 @@ namespace SharpFileSystem.FileSystems
 {
     public class FileSystemMounter : IFileSystem
     {
-        public ICollection<KeyValuePair<FileSystemPath, IFileSystem>> Mounts { get; private set; }
-
-        public FileSystemMounter(IEnumerable<KeyValuePair<FileSystemPath, IFileSystem>> mounts)
+        public FileSystemMounter(IEnumerable<KeyValuePair<FilePath, IFileSystem>> mounts)
         {
-            Mounts = new SortedList<FileSystemPath, IFileSystem>(new InverseComparer<FileSystemPath>(Comparer<FileSystemPath>.Default));
-            foreach(var mount in mounts)
+            Mounts = new SortedList<FilePath, IFileSystem>(new InverseComparer<FilePath>(Comparer<FilePath>.Default));
+            foreach (var mount in mounts)
                 Mounts.Add(mount);
         }
 
-        public FileSystemMounter(params KeyValuePair<FileSystemPath, IFileSystem>[] mounts)
-            : this((IEnumerable<KeyValuePair<FileSystemPath, IFileSystem>>)mounts)
+        public FileSystemMounter(params KeyValuePair<FilePath, IFileSystem>[] mounts)
+            : this((IEnumerable<KeyValuePair<FilePath, IFileSystem>>)mounts)
         {
         }
 
-        protected KeyValuePair<FileSystemPath, IFileSystem> Get(FileSystemPath path)
+        public ICollection<KeyValuePair<FilePath, IFileSystem>> Mounts { get; private set; }
+
+        public void CreateDirectory(FilePath path)
         {
-            return Mounts.First(pair => pair.Key == path || pair.Key.IsParentOf(path));
+            var pair = Get(path);
+            pair.Value.CreateDirectory(path.RemoveParent(pair.Key));
+        }
+
+        public Stream CreateFile(FilePath path)
+        {
+            var pair = Get(path);
+            return pair.Value.CreateFile(path.RemoveParent(pair.Key));
+        }
+
+        public void CreateTextFile(FilePath path, string contents)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Delete(FilePath path)
+        {
+            var pair = Get(path);
+            pair.Value.Delete(path.RemoveParent(pair.Key));
         }
 
         public void Dispose()
@@ -32,41 +50,38 @@ namespace SharpFileSystem.FileSystems
                 mount.Dispose();
         }
 
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
-        {
-            var pair = Get(path);
-            var entities = pair.Value.GetEntities(path.IsRoot ? path : path.RemoveParent(pair.Key));
-            return new EnumerableCollection<FileSystemPath>(entities.Select(p => pair.Key.AppendPath(p)), entities.Count);
-        }
-
-        public bool Exists(FileSystemPath path)
+        public bool Exists(FilePath path)
         {
             var pair = Get(path);
             return pair.Value.Exists(path.RemoveParent(pair.Key));
         }
 
-        public Stream CreateFile(FileSystemPath path)
+        public FilePath GetCurrentDirectory()
         {
-            var pair = Get(path);
-            return pair.Value.CreateFile(path.RemoveParent(pair.Key));
+            throw new System.NotImplementedException();
         }
 
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
+        public ICollection<FilePath> GetEntities(FilePath path)
+        {
+            var pair = Get(path);
+            var entities = pair.Value.GetEntities(path.IsRoot ? path : path.RemoveParent(pair.Key));
+            return new EnumerableCollection<FilePath>(entities.Select(p => pair.Key.AppendPath(p)), entities.Count);
+        }
+
+        public Stream OpenFile(FilePath path, FileAccess access)
         {
             var pair = Get(path);
             return pair.Value.OpenFile(path.RemoveParent(pair.Key), access);
         }
 
-        public void CreateDirectory(FileSystemPath path)
+        public string ReadAllText(FilePath path)
         {
-            var pair = Get(path);
-            pair.Value.CreateDirectory(path.RemoveParent(pair.Key));
+            throw new System.NotImplementedException();
         }
 
-        public void Delete(FileSystemPath path)
+        protected KeyValuePair<FilePath, IFileSystem> Get(FilePath path)
         {
-            var pair = Get(path);
-            pair.Value.Delete(path.RemoveParent(pair.Key));
+            return Mounts.First(pair => pair.Key == path || pair.Key.IsParentOf(path));
         }
     }
 }

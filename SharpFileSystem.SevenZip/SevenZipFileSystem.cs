@@ -11,19 +11,10 @@ using File = SharpFileSystem.File;
 
 namespace SharpFileSystem.SevenZip
 {
-    public class SevenZipFileSystem: IFileSystem
+    public class SevenZipFileSystem : IFileSystem
     {
+        private ICollection<FilePath> _entities = new List<FilePath>();
         private SevenZipExtractor _extractor;
-
-        private ICollection<FileSystemPath> _entities = new List<FileSystemPath>();
-
-        private SevenZipFileSystem(SevenZipExtractor extractor)
-        {
-            _extractor = extractor;
-            foreach (var file in _extractor.ArchiveFileData)
-                AddEntity(GetVirtualFilePath(file));
-        }
-
         public SevenZipFileSystem(Stream stream)
             : this(new SevenZipExtractor(stream))
         {
@@ -34,7 +25,14 @@ namespace SharpFileSystem.SevenZip
         {
         }
 
-        public void AddEntity(FileSystemPath path)
+        private SevenZipFileSystem(SevenZipExtractor extractor)
+        {
+            _extractor = extractor;
+            foreach (var file in _extractor.ArchiveFileData)
+                AddEntity(GetVirtualFilePath(file));
+        }
+
+        public void AddEntity(FilePath path)
         {
             if (!_entities.Contains(path))
                 _entities.Add(path);
@@ -42,37 +40,52 @@ namespace SharpFileSystem.SevenZip
                 AddEntity(path.ParentPath);
         }
 
-        public string GetSevenZipPath(FileSystemPath path)
+        public void CreateDirectory(FilePath path)
         {
-            return path.ToString().Remove(0, 1);
+            throw new NotSupportedException();
         }
 
-        public FileSystemPath GetVirtualFilePath(ArchiveFileInfo archiveFile)
+        public Stream CreateFile(FilePath path)
         {
-            string path = FileSystemPath.DirectorySeparator + archiveFile.FileName.Replace(Path.DirectorySeparatorChar, FileSystemPath.DirectorySeparator);
-            if (archiveFile.IsDirectory && path[path.Length - 1] != FileSystemPath.DirectorySeparator)
-                path += FileSystemPath.DirectorySeparator;
-            return FileSystemPath.Parse(path);
+            throw new NotSupportedException();
         }
 
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
+        public void Delete(FilePath path)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void Dispose()
+        {
+            _extractor.Dispose();
+        }
+
+        public bool Exists(FilePath path)
+        {
+            return _entities.Contains(path);
+        }
+
+        public ICollection<FilePath> GetEntities(FilePath path)
         {
             if (!path.IsDirectory)
                 throw new ArgumentException("The specified path is not a directory.", "path");
             return _entities.Where(p => !p.IsRoot && p.ParentPath.Equals(path)).ToArray();
         }
 
-        public bool Exists(FileSystemPath path)
+        public string GetSevenZipPath(FilePath path)
         {
-            return _entities.Contains(path);
+            return path.ToString().Remove(0, 1);
         }
 
-        public Stream CreateFile(FileSystemPath path)
+        public FilePath GetVirtualFilePath(ArchiveFileInfo archiveFile)
         {
-            throw new NotSupportedException();
+            string path = FilePath.DirectorySeparator + archiveFile.FileName.Replace(Path.DirectorySeparatorChar, FilePath.DirectorySeparator);
+            if (archiveFile.IsDirectory && path[path.Length - 1] != FilePath.DirectorySeparator)
+                path += FilePath.DirectorySeparator;
+            return FilePath.Parse(path);
         }
 
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
+        public Stream OpenFile(FilePath path, FileAccess access)
         {
             if (access == FileAccess.Write)
                 throw new NotSupportedException();
@@ -85,22 +98,5 @@ namespace SharpFileSystem.SevenZip
                                              });
             return s;
         }
-
-        public void CreateDirectory(FileSystemPath path)
-        {
-            throw new NotSupportedException();
-        }
-
-        public void Delete(FileSystemPath path)
-        {
-            throw new NotSupportedException();
-        }
-
-        public void Dispose()
-        {
-            _extractor.Dispose();
-        }
     }
 }
-
-

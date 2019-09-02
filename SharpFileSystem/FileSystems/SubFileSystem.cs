@@ -5,25 +5,31 @@ using SharpFileSystem.Collections;
 
 namespace SharpFileSystem.FileSystems
 {
-    public class SubFileSystem: IFileSystem
+    public class SubFileSystem : IFileSystem
     {
-        public IFileSystem FileSystem { get; private set; }
-        public FileSystemPath Root { get; private set; }
-
-        public SubFileSystem(IFileSystem fileSystem, FileSystemPath root)
+        public SubFileSystem(IFileSystem fileSystem, FilePath root)
         {
             FileSystem = fileSystem;
             Root = root;
         }
 
-        protected FileSystemPath AppendRoot(FileSystemPath path)
+        public IFileSystem FileSystem { get; private set; }
+
+        public FilePath Root { get; private set; }
+
+        public void CreateDirectory(FilePath path)
         {
-            return Root.AppendPath(path);
+            FileSystem.CreateDirectory(AppendRoot(path));
         }
 
-        protected FileSystemPath RemoveRoot(FileSystemPath path)
+        public Stream CreateFile(FilePath path)
         {
-            return path.RemoveParent(Root);
+            return FileSystem.CreateFile(AppendRoot(path));
+        }
+
+        public void Delete(FilePath path)
+        {
+            FileSystem.Delete(AppendRoot(path));
         }
 
         public void Dispose()
@@ -31,35 +37,30 @@ namespace SharpFileSystem.FileSystems
             FileSystem.Dispose();
         }
 
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
-        {
-            var paths = FileSystem.GetEntities(AppendRoot(path));
-            return new EnumerableCollection<FileSystemPath>(paths.Select(p => RemoveRoot(p)), paths.Count);
-        }
-
-        public bool Exists(FileSystemPath path)
+        public bool Exists(FilePath path)
         {
             return FileSystem.Exists(AppendRoot(path));
         }
 
-        public Stream CreateFile(FileSystemPath path)
+        public ICollection<FilePath> GetEntities(FilePath path)
         {
-            return FileSystem.CreateFile(AppendRoot(path));
+            var paths = FileSystem.GetEntities(AppendRoot(path));
+            return new EnumerableCollection<FilePath>(paths.Select(p => RemoveRoot(p)), paths.Count);
         }
 
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
+        public Stream OpenFile(FilePath path, FileAccess access)
         {
             return FileSystem.OpenFile(AppendRoot(path), access);
         }
 
-        public void CreateDirectory(FileSystemPath path)
+        protected FilePath AppendRoot(FilePath path)
         {
-            FileSystem.CreateDirectory(AppendRoot(path));
+            return Root.AppendPath(path);
         }
 
-        public void Delete(FileSystemPath path)
+        protected FilePath RemoveRoot(FilePath path)
         {
-            FileSystem.Delete(AppendRoot(path));
+            return path.RemoveParent(Root);
         }
     }
 }

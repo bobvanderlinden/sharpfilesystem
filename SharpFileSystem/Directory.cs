@@ -4,7 +4,7 @@ namespace SharpFileSystem
 {
     public class Directory : FileSystemEntity, IEquatable<Directory>
     {
-        public Directory(IFileSystem fileSystem, FileSystemPath path) : base(fileSystem, path)
+        public Directory(IFileSystem fileSystem, FilePath path) : base(fileSystem, path)
         {
             if (!path.IsDirectory)
                 throw new ArgumentException("The specified path is no directory.", "path");

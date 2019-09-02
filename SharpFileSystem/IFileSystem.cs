@@ -1,15 +1,27 @@
 using System.IO;
 using System.Collections.Generic;
 using System;
+
 namespace SharpFileSystem
 {
-public interface IFileSystem: IDisposable
-{
-    ICollection<FileSystemPath> GetEntities(FileSystemPath path);
-    bool Exists(FileSystemPath path);
-    Stream CreateFile(FileSystemPath path);
-    Stream OpenFile(FileSystemPath path, FileAccess access);
-    void CreateDirectory(FileSystemPath path);
-    void Delete(FileSystemPath path);
-}
+    public interface IFileSystem : IDisposable
+    {
+        void CreateDirectory(FilePath path);
+
+        Stream CreateFile(FilePath path);
+
+        void CreateTextFile(FilePath path, string contents);
+
+        void Delete(FilePath path);
+
+        bool Exists(FilePath path);
+
+        FilePath GetCurrentDirectory();
+
+        ICollection<FilePath> GetEntities(FilePath path);
+
+        Stream OpenFile(FilePath path, FileAccess access);
+
+        string ReadAllText(FilePath path);
+    }
 }

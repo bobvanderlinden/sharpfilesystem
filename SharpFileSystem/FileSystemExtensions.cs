@@ -9,19 +9,22 @@ namespace SharpFileSystem
 {
     public static class FileSystemExtensions
     {
-        public static Stream Open(this File file, FileAccess access)
+        public static void CreateDirectoryRecursive(this IFileSystem fileSystem, FilePath path)
         {
-            return file.FileSystem.OpenFile(file.Path, access);
+            if (!path.IsDirectory)
+                throw new ArgumentException("The specified path is not a directory.");
+            var currentDirectoryPath = FilePath.Root;
+            foreach (var dirName in path.GetDirectorySegments())
+            {
+                currentDirectoryPath = currentDirectoryPath.AppendDirectory(dirName);
+                if (!fileSystem.Exists(currentDirectoryPath))
+                    fileSystem.CreateDirectory(currentDirectoryPath);
+            }
         }
 
         public static void Delete(this FileSystemEntity entity)
         {
             entity.FileSystem.Delete(entity.Path);
-        }
-
-        public static ICollection<FileSystemPath> GetEntityPaths(this Directory directory)
-        {
-            return directory.FileSystem.GetEntities(directory.Path);
         }
 
         public static ICollection<FileSystemEntity> GetEntities(this Directory directory)
@@ -30,7 +33,7 @@ namespace SharpFileSystem
             return new EnumerableCollection<FileSystemEntity>(paths.Select(p => FileSystemEntity.Create(directory.FileSystem, p)), paths.Count);
         }
 
-        public static IEnumerable<FileSystemPath> GetEntitiesRecursive(this IFileSystem fileSystem, FileSystemPath path)
+        public static IEnumerable<FilePath> GetEntitiesRecursive(this IFileSystem fileSystem, FilePath path)
         {
             if (!path.IsDirectory)
                 throw new ArgumentException("The specified path is not a directory.");
@@ -43,21 +46,17 @@ namespace SharpFileSystem
             }
         }
 
-        public static void CreateDirectoryRecursive(this IFileSystem fileSystem, FileSystemPath path)
+        public static ICollection<FilePath> GetEntityPaths(this Directory directory)
         {
-            if (!path.IsDirectory)
-                throw new ArgumentException("The specified path is not a directory.");
-            var currentDirectoryPath = FileSystemPath.Root;
-            foreach(var dirName in path.GetDirectorySegments())
-            {
-                currentDirectoryPath = currentDirectoryPath.AppendDirectory(dirName);
-                if (!fileSystem.Exists(currentDirectoryPath))
-                    fileSystem.CreateDirectory (currentDirectoryPath);
-            }
+            return directory.FileSystem.GetEntities(directory.Path);
         }
 
-        #region Move Extensions
-        public static void Move(this IFileSystem sourceFileSystem, FileSystemPath sourcePath, IFileSystem destinationFileSystem, FileSystemPath destinationPath)
+        public static Stream Open(this File file, FileAccess access)
+        {
+            return file.FileSystem.OpenFile(file.Path, access);
+        }
+
+        public static void Move(this IFileSystem sourceFileSystem, FilePath sourcePath, IFileSystem destinationFileSystem, FilePath destinationPath)
         {
             IEntityMover mover;
             if (!EntityMovers.Registration.TryGetSupported(sourceFileSystem.GetType(), destinationFileSystem.GetType(), out mover))
@@ -65,7 +64,7 @@ namespace SharpFileSystem
             mover.Move(sourceFileSystem, sourcePath, destinationFileSystem, destinationPath);
         }
 
-        public static void MoveTo(this FileSystemEntity entity, IFileSystem destinationFileSystem, FileSystemPath destinationPath)
+        public static void MoveTo(this FileSystemEntity entity, IFileSystem destinationFileSystem, FilePath destinationPath)
         {
             entity.FileSystem.Move(entity.Path, destinationFileSystem, destinationPath);
         }
@@ -78,11 +77,9 @@ namespace SharpFileSystem
         public static void MoveTo(this File source, Directory destination)
         {
             source.FileSystem.Move(source.Path, destination.FileSystem, destination.Path.AppendFile(source.Path.EntityName));
-        } 
-        #endregion
+        }
 
-        #region Copy Extensions
-        public static void Copy(this IFileSystem sourceFileSystem, FileSystemPath sourcePath, IFileSystem destinationFileSystem, FileSystemPath destinationPath)
+        public static void Copy(this IFileSystem sourceFileSystem, FilePath sourcePath, IFileSystem destinationFileSystem, FilePath destinationPath)
         {
             IEntityCopier copier;
             if (!EntityCopiers.Registration.TryGetSupported(sourceFileSystem.GetType(), destinationFileSystem.GetType(), out copier))
@@ -90,7 +87,7 @@ namespace SharpFileSystem
             copier.Copy(sourceFileSystem, sourcePath, destinationFileSystem, destinationPath);
         }
 
-        public static void CopyTo(this FileSystemEntity entity, IFileSystem destinationFileSystem, FileSystemPath destinationPath)
+        public static void CopyTo(this FileSystemEntity entity, IFileSystem destinationFileSystem, FilePath destinationPath)
         {
             entity.FileSystem.Copy(entity.Path, destinationFileSystem, destinationPath);
         }
@@ -104,6 +101,5 @@ namespace SharpFileSystem
         {
             source.FileSystem.Copy(source.Path, destination.FileSystem, destination.Path.AppendFile(source.Path.EntityName));
         }
-        #endregion
     }
 }

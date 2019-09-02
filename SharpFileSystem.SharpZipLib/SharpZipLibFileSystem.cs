@@ -7,23 +7,40 @@ using SharpFileSystem.FileSystems;
 
 namespace SharpFileSystem.SharpZipLib
 {
-    public class SharpZipLibFileSystem: IFileSystem
+    public class SharpZipLibFileSystem : IFileSystem
     {
-        public ZipFile ZipFile { get; set; }
-
-        public static SharpZipLibFileSystem Open(Stream s)
+        private SharpZipLibFileSystem(ZipFile zipFile)
         {
-            return new SharpZipLibFileSystem(new ZipFile(s));
+            ZipFile = zipFile;
         }
+
+        public ZipFile ZipFile { get; set; }
 
         public static SharpZipLibFileSystem Create(Stream s)
         {
             return new SharpZipLibFileSystem(ZipFile.Create(s));
         }
 
-        private SharpZipLibFileSystem(ZipFile zipFile)
+        public static SharpZipLibFileSystem Open(Stream s)
         {
-            ZipFile = zipFile;
+            return new SharpZipLibFileSystem(new ZipFile(s));
+        }
+
+        public void CreateDirectory(FilePath path)
+        {
+            ZipFile.AddDirectory(ToEntryPath(path));
+        }
+
+        public Stream CreateFile(FilePath path)
+        {
+            var entry = new MemoryZipEntry();
+            ZipFile.Add(entry, ToEntryPath(path));
+            return entry.GetSource();
+        }
+
+        public void Delete(FilePath path)
+        {
+            ZipFile.Delete(ToEntryPath(path));
         }
 
         public void Dispose()
@@ -33,28 +50,16 @@ namespace SharpFileSystem.SharpZipLib
             ZipFile.Close();
         }
 
-        protected FileSystemPath ToPath(ZipEntry entry)
+        public bool Exists(FilePath path)
         {
-            return FileSystemPath.Parse(FileSystemPath.DirectorySeparator + entry.Name);
+            if (path.IsFile)
+                return ToEntry(path) != null;
+            return GetZipEntries()
+                .Select(ToPath)
+                .Any(entryPath => entryPath.IsChildOf(path));
         }
 
-        protected string ToEntryPath(FileSystemPath path)
-        {
-            // Remove heading '/' from path.
-            return path.Path.TrimStart(FileSystemPath.DirectorySeparator);
-        }
-
-        protected ZipEntry ToEntry(FileSystemPath path)
-        {
-            return ZipFile.GetEntry(ToEntryPath(path));
-        }
-
-        protected IEnumerable<ZipEntry> GetZipEntries()
-        {
-            return ZipFile.Cast<ZipEntry>();
-        }
-
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
+        public ICollection<FilePath> GetEntities(FilePath path)
         {
             return GetZipEntries()
                 .Select(ToPath)
@@ -67,40 +72,35 @@ namespace SharpFileSystem.SharpZipLib
                 .ToList();
         }
 
-        public bool Exists(FileSystemPath path)
-        {
-            if (path.IsFile)
-                return ToEntry(path) != null;
-            return GetZipEntries()
-                .Select(ToPath)
-                .Any(entryPath => entryPath.IsChildOf(path));
-        }
-
-        public Stream CreateFile(FileSystemPath path)
-        {
-            var entry = new MemoryZipEntry();
-            ZipFile.Add(entry, ToEntryPath(path));
-            return entry.GetSource();
-        }
-
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
+        public Stream OpenFile(FilePath path, FileAccess access)
         {
             if (access != FileAccess.Read)
                 throw new NotSupportedException();
             return ZipFile.GetInputStream(ToEntry(path));
         }
 
-        public void CreateDirectory(FileSystemPath path)
+        protected IEnumerable<ZipEntry> GetZipEntries()
         {
-            ZipFile.AddDirectory(ToEntryPath(path));
+            return ZipFile.Cast<ZipEntry>();
         }
 
-        public void Delete(FileSystemPath path)
+        protected ZipEntry ToEntry(FilePath path)
         {
-            ZipFile.Delete(ToEntryPath(path));
+            return ZipFile.GetEntry(ToEntryPath(path));
         }
 
-        public class MemoryZipEntry: MemoryFileSystem.MemoryFile, IStaticDataSource
+        protected string ToEntryPath(FilePath path)
+        {
+            // Remove heading '/' from path.
+            return path.Path.TrimStart(FilePath.DirectorySeparator);
+        }
+
+        protected FilePath ToPath(ZipEntry entry)
+        {
+            return FilePath.Parse(FilePath.DirectorySeparator + entry.Name);
+        }
+
+        public class MemoryZipEntry : MemoryFileSystem.MemoryFile, IStaticDataSource
         {
             public Stream GetSource()
             {

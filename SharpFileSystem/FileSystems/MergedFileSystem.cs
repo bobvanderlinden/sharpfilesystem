@@ -6,9 +6,8 @@ using System.Text;
 
 namespace SharpFileSystem.FileSystems
 {
-    public class MergedFileSystem: IFileSystem
+    public class MergedFileSystem : IFileSystem
     {
-        public IEnumerable<IFileSystem> FileSystems { get; private set; }
         public MergedFileSystem(IEnumerable<IFileSystem> fileSystems)
         {
             FileSystems = fileSystems.ToArray();
@@ -19,49 +18,9 @@ namespace SharpFileSystem.FileSystems
             FileSystems = fileSystems.ToArray();
         }
 
-        public void Dispose()
-        {
-            foreach(var fs in FileSystems)
-                fs.Dispose();
-        }
+        public IEnumerable<IFileSystem> FileSystems { get; private set; }
 
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
-        {
-            var entities = new SortedList<FileSystemPath, FileSystemPath>();
-            foreach (var fs in FileSystems.Where(fs => fs.Exists(path)))
-            {
-                foreach(var entity in fs.GetEntities(path))
-                    if (!entities.ContainsKey(entity))
-                        entities.Add(entity, entity);
-            }
-            return entities.Values;
-        }
-
-        public bool Exists(FileSystemPath path)
-        {
-            return FileSystems.Any(fs => fs.Exists(path));
-        }
-
-        public IFileSystem GetFirst(FileSystemPath path)
-        {
-            return FileSystems.FirstOrDefault(fs => fs.Exists(path));
-        }
-
-        public Stream CreateFile(FileSystemPath path)
-        {
-            var fs = GetFirst(path) ?? FileSystems.First();
-            return fs.CreateFile(path);
-        }
-
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
-        {
-            var fs = GetFirst(path);
-            if (fs == null)
-                throw new FileNotFoundException();
-            return fs.OpenFile(path, access);
-        }
-
-        public void CreateDirectory(FileSystemPath path)
+        public void CreateDirectory(FilePath path)
         {
             if (Exists(path))
                 throw new ArgumentException("The specified directory already exists.");
@@ -71,10 +30,52 @@ namespace SharpFileSystem.FileSystems
             fs.CreateDirectory(path);
         }
 
-        public void Delete(FileSystemPath path)
+        public Stream CreateFile(FilePath path)
         {
-            foreach(var fs in FileSystems.Where(fs => fs.Exists(path)))
+            var fs = GetFirst(path) ?? FileSystems.First();
+            return fs.CreateFile(path);
+        }
+
+        public void Delete(FilePath path)
+        {
+            foreach (var fs in FileSystems.Where(fs => fs.Exists(path)))
                 fs.Delete(path);
+        }
+
+        public void Dispose()
+        {
+            foreach (var fs in FileSystems)
+                fs.Dispose();
+        }
+
+        public bool Exists(FilePath path)
+        {
+            return FileSystems.Any(fs => fs.Exists(path));
+        }
+
+        public ICollection<FilePath> GetEntities(FilePath path)
+        {
+            var entities = new SortedList<FilePath, FilePath>();
+            foreach (var fs in FileSystems.Where(fs => fs.Exists(path)))
+            {
+                foreach (var entity in fs.GetEntities(path))
+                    if (!entities.ContainsKey(entity))
+                        entities.Add(entity, entity);
+            }
+            return entities.Values;
+        }
+
+        public IFileSystem GetFirst(FilePath path)
+        {
+            return FileSystems.FirstOrDefault(fs => fs.Exists(path));
+        }
+
+        public Stream OpenFile(FilePath path, FileAccess access)
+        {
+            var fs = GetFirst(path);
+            if (fs == null)
+                throw new FileNotFoundException();
+            return fs.OpenFile(path, access);
         }
     }
 }

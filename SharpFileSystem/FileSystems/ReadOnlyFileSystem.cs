@@ -6,13 +6,28 @@ using System.Text;
 
 namespace SharpFileSystem.FileSystems
 {
-    public class ReadOnlyFileSystem: IFileSystem
+    public class ReadOnlyFileSystem : IFileSystem
     {
-        public IFileSystem FileSystem { get; private set; }
-
         public ReadOnlyFileSystem(IFileSystem fileSystem)
         {
             FileSystem = fileSystem;
+        }
+
+        public IFileSystem FileSystem { get; private set; }
+
+        public void CreateDirectory(FilePath path)
+        {
+            throw new InvalidOperationException("This is a read-only filesystem.");
+        }
+
+        public Stream CreateFile(FilePath path)
+        {
+            throw new InvalidOperationException("This is a read-only filesystem.");
+        }
+
+        public void Delete(FilePath path)
+        {
+            throw new InvalidOperationException("This is a read-only filesystem.");
         }
 
         public void Dispose()
@@ -20,36 +35,21 @@ namespace SharpFileSystem.FileSystems
             FileSystem.Dispose();
         }
 
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
-        {
-            return FileSystem.GetEntities(path);
-        }
-
-        public bool Exists(FileSystemPath path)
+        public bool Exists(FilePath path)
         {
             return FileSystem.Exists(path);
         }
 
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
+        public ICollection<FilePath> GetEntities(FilePath path)
+        {
+            return FileSystem.GetEntities(path);
+        }
+
+        public Stream OpenFile(FilePath path, FileAccess access)
         {
             if (access != FileAccess.Read)
                 throw new InvalidOperationException("This is a read-only filesystem.");
             return FileSystem.OpenFile(path, access);
-        }
-
-        public Stream CreateFile(FileSystemPath path)
-        {
-            throw new InvalidOperationException("This is a read-only filesystem.");
-        }
-
-        public void CreateDirectory(FileSystemPath path)
-        {
-            throw new InvalidOperationException("This is a read-only filesystem.");
-        }
-
-        public void Delete(FileSystemPath path)
-        {
-            throw new InvalidOperationException("This is a read-only filesystem.");
         }
     }
 }

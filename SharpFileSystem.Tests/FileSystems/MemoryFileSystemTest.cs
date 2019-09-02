@@ -13,14 +13,9 @@ namespace SharpFileSystem.Tests.FileSystems
     [TestFixture]
     public class MemoryFileSystemTest
     {
-        MemoryFileSystem FileSystem { get; set; }
-        FileSystemPath RootFilePath { get; } = FileSystemPath.Root.AppendFile("x");
+        private MemoryFileSystem FileSystem { get; set; }
 
-        [SetUp]
-        public void Initialize()
-        {
-            FileSystem = new MemoryFileSystem();
-        }
+        private FilePath RootFilePath { get; } = FilePath.Root.AppendFile("x");
 
         [TearDown]
         public void Cleanup()
@@ -54,8 +49,26 @@ namespace SharpFileSystem.Tests.FileSystems
                     // trim to the length that was read.
                     readContent.Take(content.Length).ToArray());
 
-                // Trying to read beyond end of file should return 0.
+                // Trying to read beyond end of file should
+                // return 0.
                 Assert.AreEqual(0, xStream.Read(readContent, 0, readContent.Length));
+            }
+        }
+
+        [Test]
+        public void CreateFile_Empty()
+        {
+            using (var stream = FileSystem.CreateFile(RootFilePath))
+            {
+            }
+
+            Assert.IsTrue(FileSystem.Exists(RootFilePath));
+
+            using (var stream = FileSystem.OpenFile(RootFilePath, FileAccess.Read))
+            {
+                CollectionAssert.AreEqual(
+                    new byte[] { },
+                    stream.ReadAllBytes());
             }
         }
 
@@ -85,23 +98,6 @@ namespace SharpFileSystem.Tests.FileSystems
         }
 
         [Test]
-        public void CreateFile_Empty()
-        {
-            using (var stream = FileSystem.CreateFile(RootFilePath))
-            {
-            }
-
-            Assert.IsTrue(FileSystem.Exists(RootFilePath));
-
-            using (var stream = FileSystem.OpenFile(RootFilePath, FileAccess.Read))
-            {
-                CollectionAssert.AreEqual(
-                    new byte[] { },
-                    stream.ReadAllBytes());
-            }
-        }
-
-        [Test]
         public void GetEntities()
         {
             for (var i = 0; i < 10; i++)
@@ -114,8 +110,14 @@ namespace SharpFileSystem.Tests.FileSystems
                 // Should exist once.
                 CollectionAssert.AreEquivalent(
                     new[] { RootFilePath, },
-                    FileSystem.GetEntities(FileSystemPath.Root).ToArray());
+                    FileSystem.GetEntities(FilePath.Root).ToArray());
             }
+        }
+
+        [SetUp]
+        public void Initialize()
+        {
+            FileSystem = new MemoryFileSystem();
         }
     }
 }
