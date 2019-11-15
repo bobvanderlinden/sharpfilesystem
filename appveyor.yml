@@ -12,6 +12,8 @@ build_script:
 
 
     dotnet pack -c Release
+test_script:
+- cmd: dotnet test SharpFileSystem.Tests/SharpFileSystem.Tests.csproj
 artifacts:
 - path: sharpcorefilesystem/bin/release/*
   name: sharpfilesystem
