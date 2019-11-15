@@ -2,7 +2,7 @@ version: 1.0.{build}
 image: Visual Studio 2017
 environment:
   nugetKey:
-    secure: Ik0QjCJ0yNqLI5QRup+5eG9wkP38rJkPAYd/fbk8vUcBnO/5qi5U9O7Q1K312d9Z
+    secure: xYfI50kUX3/B3JgULd2wsy5C8ofRT5+BLUNj/fLbxJSZdecJn7HTElb6p5obvNeY
 build_script:
 - cmd: >-
     dotnet restore
@@ -14,4 +14,8 @@ build_script:
     dotnet pack -c Release
 artifacts:
 - path: sharpcorefilesystem/bin/release/*
-  name: sharpcorefilesystem
+  name: sharpfilesystem
+deploy:
+- provider: NuGet
+  api_key:
+    secure: xYfI50kUX3/B3JgULd2wsy5C8ofRT5+BLUNj/fLbxJSZdecJn7HTElb6p5obvNeY

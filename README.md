@@ -1,6 +1,7 @@
+
 # SharpFileSystem
 
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/github/bobvanderlinden/sharpfilesystem?svg=true)](https://ci.appveyor.com/project/bobvanderlinden/sharpfilesystem) [![Travis](https://img.shields.io/travis/bobvanderlinden/sharpfilesystem.svg?maxAge=2592000&label=travis)](https://travis-ci.org/bobvanderlinden/sharpfilesystem) [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](LICENSE.txt)
+This a repository is a fork of [bobvanderlinden/sharpfilesystem](https://github.com/bobvanderlinden/sharpfilesystem). It ports it to netstandard2.0.
 
 SharpFileSystem is a [Virtual File System (VFS)](http://en.wikipedia.org/wiki/Virtual_file_system) implementation for .NET to allow access to different filesystems in the same way for normal files and directories.
 
