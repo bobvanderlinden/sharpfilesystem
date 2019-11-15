@@ -3,13 +3,12 @@ using SharpFileSystem.FileSystems;
 using System.IO;
 using System.Linq;
 using System.Text;
-using NUnit.Framework;
 using SharpFileSystem.IO;
+using Xunit;
 
 namespace SharpFileSystem.Tests.FileSystems
 {
-    [TestFixture]
-    public class PhysicalFileSystemTest
+    public class PhysicalFileSystemTest : IDisposable
     {
         string Root { get; set; }
         PhysicalFileSystem FileSystem { get; set; }
@@ -18,68 +17,69 @@ namespace SharpFileSystem.Tests.FileSystems
         string FileName { get; }
         FileSystemPath FileNamePath { get; }
 
+//        public PhysicalFileSystemTest()
+//        {
+//            FileName = "x";
+//            FileNamePath = FileSystemPath.Root.AppendFile(FileName);
+//        }
+
         public PhysicalFileSystemTest()
         {
             FileName = "x";
             FileNamePath = FileSystemPath.Root.AppendFile(FileName);
-        }
-
-        [SetUp]
-        public void Initialize()
-        {
             Root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
             System.IO.Directory.CreateDirectory(Root);
             AbsoluteFileName = Path.Combine(Root, FileName);
             FileSystem = new PhysicalFileSystem(Root);
+
         }
 
-        [TearDown]
-        public void Cleanup()
+        public void Dispose()
         {
             using (FileSystem) { }
             System.IO.Directory.Delete(Root, true);
         }
 
-        [Test]
+        [Fact]
         public void CreateFile()
         {
-            Assert.IsFalse(System.IO.File.Exists(AbsoluteFileName));
-            Assert.IsFalse(FileSystem.Exists(FileNamePath));
+            Assert.False(System.IO.File.Exists(AbsoluteFileName));
+            Assert.False(FileSystem.Exists(FileNamePath));
 
             var content = Encoding.UTF8.GetBytes("asdf");
             using (var stream = FileSystem.CreateFile(FileNamePath))
             {
                 // File should exist at this point.
-                Assert.IsTrue(FileSystem.Exists(FileNamePath));
+                Assert.True(FileSystem.Exists(FileNamePath));
                 // File should also exist irl at this point.
-                Assert.IsTrue(System.IO.File.Exists(AbsoluteFileName));
+                Assert.True(System.IO.File.Exists(AbsoluteFileName));
 
                 stream.Write(content, 0, content.Length);
             }
 
             // File should contain content.
-            CollectionAssert.AreEqual(content, System.IO.File.ReadAllBytes(AbsoluteFileName));
+            Assert.Equal(content, System.IO.File.ReadAllBytes(AbsoluteFileName));
 
             using (var stream = FileSystem.OpenFile(FileNamePath, FileAccess.Read))
             {
                 // Verify that EOF type stuff works.
                 var readContent = new byte[2 * content.Length];
-                Assert.AreEqual(content.Length, stream.Read(readContent, 0, readContent.Length));
-                CollectionAssert.AreEqual(
+                Assert.Equal(content.Length, stream.Read(readContent, 0, readContent.Length));
+                Assert.Equal(
                     content,
                     // trim to actual length.
                     readContent.Take(content.Length).ToArray());
 
                 // Trying to read beyond end of file should just return 0.
-                Assert.AreEqual(0, stream.Read(readContent, 0, readContent.Length));
+                Assert.Equal(0, stream.Read(readContent, 0, readContent.Length));
             }
         }
 
-        [Test]
+        [Fact]
         public void CreateFile_Exists()
         {
-            Assert.IsFalse(System.IO.File.Exists(AbsoluteFileName));
-            Assert.IsFalse(FileSystem.Exists(FileNamePath));
+            Assert.False(System.IO.File.Exists(AbsoluteFileName));
+            Assert.False(FileSystem.Exists(FileNamePath));
 
             using (var stream = FileSystem.CreateFile(FileNamePath))
             {
@@ -93,26 +93,26 @@ namespace SharpFileSystem.Tests.FileSystems
             {
                 stream.Write(content2, 0, content2.Length);
             }
-            CollectionAssert.AreEqual(content2, System.IO.File.ReadAllBytes(AbsoluteFileName));
+            Assert.Equal(content2, System.IO.File.ReadAllBytes(AbsoluteFileName));
             using (var stream = FileSystem.OpenFile(FileNamePath, FileAccess.Read))
             {
-                CollectionAssert.AreEqual(content2, stream.ReadAllBytes());
+                Assert.Equal(content2, stream.ReadAllBytes());
             }
         }
 
-        [Test]
+        [Fact]
         public void CreateFile_Empty()
         {
             using (var stream = FileSystem.CreateFile(FileNamePath))
             {
             }
 
-            CollectionAssert.AreEqual(
+            Assert.Equal(
                 new byte[] { },
                 System.IO.File.ReadAllBytes(AbsoluteFileName));
             using (var stream = FileSystem.OpenFile(FileNamePath, FileAccess.Read))
             {
-                CollectionAssert.AreEqual(
+                Assert.Equal(
                     new byte[] { },
                     stream.ReadAllBytes());
             }
