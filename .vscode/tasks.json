@@ -1,0 +1,51 @@
+{
+    "version": "2.0.0",
+    "command": "dotnet",
+    "args": [],
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "args": [
+                "build",
+                "${workspaceFolder}/SharpFileSystem.Tests/SharpFileSystem.Tests.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+        },
+        {
+            "label": "unit tests",
+            "command": "dotnet",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "args": [
+                "test",
+                "${workspaceFolder}/SharpFileSystem.Tests/SharpFileSystem.Tests.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+        },
+        {
+            "label": "test with coverage",
+            "command": "dotnet",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "args": [
+                "test",
+                "/p:CollectCoverage=true",
+                "/p:CoverletOutputFormat=lcov",
+                "/p:CoverletOutput=./lcov",
+                "/p:include=\"[SharpCoreFileSystem*]*;[SharpFileSystem*]*\"",
+                    "/p:exclude=\"[xunit*]*\"",
+                "${workspaceFolder}/SharpFileSystem.Tests/SharpFileSystem.Tests.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+        },
+    ]
+}
