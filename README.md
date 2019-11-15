@@ -1,5 +1,7 @@
 
 # SharpFileSystem
+[![Build status](https://ci.appveyor.com/api/projects/status/qigx4o3c0x7swp31?svg=true)](https://ci.appveyor.com/project/OlivierDuhart/sharpfilesystem)
+
 
 This a repository is a fork of [bobvanderlinden/sharpfilesystem](https://github.com/bobvanderlinden/sharpfilesystem). It ports it to netstandard2.0.
 
