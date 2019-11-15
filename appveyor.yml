@@ -13,5 +13,5 @@ build_script:
 
     dotnet pack -c Release
 artifacts:
-- path: sharpfilesystem/bin/release/*
-  name: sharpfilesystem
+- path: sharpcorefilesystem/bin/release/*
+  name: sharpcorefilesystem
