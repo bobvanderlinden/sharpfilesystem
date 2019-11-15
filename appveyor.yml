@@ -1,38 +1,16 @@
-version: 1.0.0.{build}
+version: 1.0.{build}
+image: Visual Studio 2017
+environment:
+  nugetKey: oy2elmciui62sswadljqreyzkjkluwjerovbayu7r2dcw4
+build_script:
+- cmd: >-
+    dotnet restore
 
-platform: Any CPU
 
-configuration: Release
+    dotnet build -c Release
 
-before_build:
-- cmd: nuget restore SharpFileSystem.sln
 
-assembly_info:
-  patch: true
-  file: 'GlobalAssemblyInfo.*'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
-
-build:
-  publish_nuget: true
-  publish_nuget_symbols: true
-  include_nuget_references: true
-
-test:
-  assemblies:
-    - SharpFileSystem.Tests.dll
-
+    dotnet pack -c Release
 artifacts:
-  - path: bin/Release
-    name: BuildRelease
-  - path: bin/**/*.nupkg
-    name: NuGet
-
-deploy:
-- provider: NuGet
-  server: https://www.nuget.org/api/v2/package
-  api_key:
-    secure: kwXmJKEWMMUNsCgHyVYpCRs9WFKzPMUXIw0foni/0bFL6A3yozhiUb3YoAjhLvQ1
-  skip_symbols: false
-  on:
-    appveyor_repo_tag: true
+- path: sharpfilesystem/bin/release/*
+  name: sharpfilesystem
