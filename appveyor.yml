@@ -1,7 +1,8 @@
 version: 1.0.{build}
 image: Visual Studio 2017
 environment:
-  nugetKey: oy2elmciui62sswadljqreyzkjkluwjerovbayu7r2dcw4
+  nugetKey:
+    secure: Ik0QjCJ0yNqLI5QRup+5eG9wkP38rJkPAYd/fbk8vUcBnO/5qi5U9O7Q1K312d9Z
 build_script:
 - cmd: >-
     dotnet restore

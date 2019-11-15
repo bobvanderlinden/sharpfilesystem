@@ -11,6 +11,7 @@
     <RepositoryUrl>https://github.com/b3b00/sharpfilesystem</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/b3b00/sharpfilesystem/blob/master/LICENSE</PackageLicenseUrl>
     <PackageVersion>1.0.0</PackageVersion>
+    <RootNamespace>SharpFileSystem</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

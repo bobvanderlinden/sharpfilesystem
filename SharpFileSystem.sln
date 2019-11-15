@@ -1,11 +1,11 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0F7EEFA8-7215-406A-9353-849DF790CAA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFileSystem", "SharpFileSystem\SharpFileSystem.csproj", "{3C4D07BA-23B5-4A63-92CF-F3BF892B7329}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCoreFileSystem", "SharpCoreFileSystem\SharpCoreFileSystem.csproj", "{3C4D07BA-23B5-4A63-92CF-F3BF892B7329}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFileSystem.SevenZip", "SharpFileSystem.SevenZip\SharpFileSystem.SevenZip.csproj", "{EA7CBA29-CFA8-4945-BB64-CCF25078190E}"
 EndProject

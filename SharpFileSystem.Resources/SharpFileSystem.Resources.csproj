@@ -33,6 +33,6 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpFileSystem\SharpFileSystem.csproj" />
+    <ProjectReference Include="..\SharpCoreFileSystem\SharpCoreFileSystem.csproj" />
   </ItemGroup>
 </Project>
