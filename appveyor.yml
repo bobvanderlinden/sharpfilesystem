@@ -2,7 +2,7 @@ version: 1.0.{build}
 image: Visual Studio 2017
 environment:
   nugetKey:
-    secure: xYfI50kUX3/B3JgULd2wsy5C8ofRT5+BLUNj/fLbxJSZdecJn7HTElb6p5obvNeY
+    secure: jlkQ4lJxiapfC87YZMljFZbeROpo26F7wbEB7q+xn5xWlAyfOvy/SNrji8a5uKap
 build_script:
 - cmd: >-
     dotnet restore
@@ -20,4 +20,4 @@ artifacts:
 deploy:
 - provider: NuGet
   api_key:
-    secure: xYfI50kUX3/B3JgULd2wsy5C8ofRT5+BLUNj/fLbxJSZdecJn7HTElb6p5obvNeY
+    secure: jlkQ4lJxiapfC87YZMljFZbeROpo26F7wbEB7q+xn5xWlAyfOvy/SNrji8a5uKap
