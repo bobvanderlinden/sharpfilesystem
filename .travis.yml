@@ -6,7 +6,7 @@ dotnet: 2.2
 script:
   - dotnet restore
   - dotnet build
-  - dotnet test SharFileSystem/SharFileSystem.csproj
+  - dotnet test
 
 #language: csharp
 #mono:
