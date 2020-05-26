@@ -50,4 +50,9 @@
     <ProjectReference Include="..\SharpCoreFileSystem\SharpCoreFileSystem.csproj" />
     <ProjectReference Include="..\SharpFileSystem.SharpZipLib\SharpFileSystem.SharpZipLib.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="test.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
