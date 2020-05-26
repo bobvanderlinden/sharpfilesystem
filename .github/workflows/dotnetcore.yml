@@ -22,7 +22,7 @@ jobs:
     - name: Build with dotnet
       run: dotnet build --configuration Release
     - name: Test with dotnet
-      run: dotnet test -c SharpFileSystem.Tests/SharpFileSystem.Tests.csproj
+      run: dotnet test -c Debug SharpFileSystem.Tests/SharpFileSystem.Tests.csproj
     - name: push
       id: publish_nuget
       uses: brandedoutcast/publish-nuget@v2.5.2
