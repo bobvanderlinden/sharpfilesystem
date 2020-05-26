@@ -2,10 +2,12 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using SharpFileSystem;
 using SharpFileSystem.FileSystems;
+using SharpFileSystem.Resources;
 using SharpFileSystem.SevenZip;
 using SharpFileSystem.SharpZipLib;
 using Xunit;
@@ -19,6 +21,7 @@ namespace TestSFS
 
         static void Main(string[] args)
         {
+            embeddedFS();
             CreateMemoryFile();
             ReadZipFS();
             WriteZipFS();
@@ -59,6 +62,38 @@ namespace TestSFS
         }
 
 
+        static void embeddedFS()
+        {
+            string content = "test embedded resource";
+            string deepContent = "deep file";
+            var filePath = FileSystemPath.Root.AppendFile("test.txt");
+            var resDir = FileSystemPath.Root.AppendDirectory("resDir");
+            var deepFilePath = resDir.AppendFile("deepFile.txt");
+            EmbeddedResourceFileSystem eRscFS = new EmbeddedResourceFileSystem(Assembly.GetAssembly(typeof(Program)));
+            Assert.True(eRscFS.Exists(filePath));
+            using (var stream = eRscFS.OpenFile(filePath,FileAccess.Read))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    string value = reader.ReadToEnd();
+                    Assert.Equal(content,value);
+                }
+            }
+
+            Assert.True(eRscFS.Exists(deepFilePath));
+            using (var stream = eRscFS.OpenFile(deepFilePath,FileAccess.Read))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    string value = reader.ReadToEnd();
+                    Assert.Equal(deepContent,value);
+                }
+            }
+
+            var entities = eRscFS.GetEntities(FileSystemPath.Root);
+            var recentities = eRscFS.GetEntitiesRecursive(FileSystemPath.Root);
+            ;
+        }
 
         static void WriteZipFS()
         {

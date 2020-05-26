@@ -7,9 +7,19 @@ using System.Reflection;
 
 namespace SharpFileSystem.Resources
 {
+
+    public static class AssemblyExtensions
+    {
+        public static string GetShortName(this Assembly assembly)
+        {
+            return assembly.FullName.Split(new[] {','}).First();
+        }
+    }
     public class EmbeddedResourceFileSystem : IFileSystem
     {
         public Assembly Assembly { get; private set; }
+
+        private string AssemblyName => Assembly.GetShortName();
         public EmbeddedResourceFileSystem(Assembly assembly)
         {
             Assembly = assembly;
@@ -19,21 +29,21 @@ namespace SharpFileSystem.Resources
         {
             if (!path.IsRoot)
                 throw new DirectoryNotFoundException();
-            return Assembly.GetManifestResourceNames().Select(name => FileSystemPath.Root.AppendFile(name)).ToArray();
+            return Assembly.GetManifestResourceNames().Select(name => FileSystemPath.Root.AppendFile(name.Replace(AssemblyName+".",""))).ToArray();
         }
 
         public bool Exists(FileSystemPath path)
         {
-            return path.IsRoot || !path.IsDirectory && Assembly.GetManifestResourceNames().Contains(path.EntityName);
+            return path.IsRoot || !path.IsDirectory && Assembly.GetManifestResourceNames().Contains($"{AssemblyName}.{path.Path.Substring(1).Replace("/",".")}");
         }
 
         public Stream OpenFile(FileSystemPath path, FileAccess access)
         {
             if (access == FileAccess.Write)
                 throw new NotSupportedException();
-            if (path.IsDirectory || path.ParentPath != FileSystemPath.Root)
-                throw new FileNotFoundException();
-            return Assembly.GetManifestResourceStream(path.EntityName);
+            // if (path.IsDirectory || path.ParentPath != FileSystemPath.Root)
+            //     throw new FileNotFoundException();
+            return Assembly.GetManifestResourceStream($"{AssemblyName}.{path.Path.Substring(1).Replace("/",".")}");
         }
 
         public Stream CreateFile(FileSystemPath path)

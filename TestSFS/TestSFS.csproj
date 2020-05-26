@@ -27,4 +27,15 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="test.txt" />
+      <EmbeddedResource Include="test.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="resDir\deepFile.txt" />
+      <EmbeddedResource Include="resDir\deepFile.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>
