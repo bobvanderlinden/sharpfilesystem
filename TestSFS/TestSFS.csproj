@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SharpCoreFileSystem\SharpCoreFileSystem.csproj" />
+      <ProjectReference Include="..\SharpFileSystem.Resources\SharpFileSystem.Resources.csproj" />
+      <ProjectReference Include="..\SharpFileSystem.SevenZip\SharpFileSystem.SevenZip.csproj" />
+      <ProjectReference Include="..\SharpFileSystem.SharpZipLib\SharpFileSystem.SharpZipLib.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="xunit.assert" Version="2.4.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="test.7z" />
+      <Content Include="test.7z">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test.zip" />
+      <Content Include="test.zip">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+</Project>

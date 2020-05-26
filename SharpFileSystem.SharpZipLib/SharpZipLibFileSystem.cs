@@ -7,6 +7,21 @@ using SharpFileSystem.FileSystems;
 
 namespace SharpFileSystem.SharpZipLib
 {
+
+    public class ZipTransaction : IDisposable
+    {
+        public SharpZipLibFileSystem FileSystem;
+
+        public ZipTransaction(SharpZipLibFileSystem fs)
+        {
+            FileSystem = fs;
+        }
+        public void Dispose()
+        {
+            FileSystem.CommitUpdate();
+        }
+    }
+
     public class SharpZipLibFileSystem: IFileSystem
     {
         public ZipFile ZipFile { get; set; }
@@ -106,6 +121,22 @@ namespace SharpFileSystem.SharpZipLib
             {
                 return new MemoryFileSystem.MemoryFileStream(this);
             }
+        }
+
+        public void BeginUpdate()
+        {
+            ZipFile.BeginUpdate();
+        }
+
+        public void CommitUpdate()
+        {
+            ZipFile.CommitUpdate();
+        }
+
+        public ZipTransaction OpenWriteTransaction()
+        {
+            BeginUpdate();
+            return new ZipTransaction(this);
         }
     }
 }
