@@ -48,11 +48,20 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpCoreFileSystem\SharpCoreFileSystem.csproj" />
+    <ProjectReference Include="..\SharpFileSystem.Resources\SharpFileSystem.Resources.csproj" />
     <ProjectReference Include="..\SharpFileSystem.SharpZipLib\SharpFileSystem.SharpZipLib.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="test.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="resDir\deepFile.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="test.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
