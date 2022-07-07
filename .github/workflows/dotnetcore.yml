@@ -1,6 +1,6 @@
 name: .NET Core
 
-on: [push, pull_request]
+on: [push, pull_request,workflow_dispatch]
 jobs:
   build:
 
@@ -16,7 +16,7 @@ jobs:
       run: dotnet build --configuration Release
     - name: Test with dotnet
       run: dotnet test -c Debug SharpFileSystem.Tests/SharpFileSystem.Tests.csproj
-    - name: push
+    - name: publish nuget
       id: publish_nuget
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
