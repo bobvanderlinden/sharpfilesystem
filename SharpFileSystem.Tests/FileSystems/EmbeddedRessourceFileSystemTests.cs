@@ -1,6 +1,6 @@
 using System.IO;
 using System.Reflection;
-using SharpFileSystem.Resources;
+using SharpFileSystem.FileSystems;
 using Xunit;
 
 
@@ -27,6 +27,9 @@ namespace SharpFileSystem.Tests.FileSystems
                 }
             }
 
+            var readContent = eRscFS.ReadAllText(filePath);
+            Assert.Equal(content,readContent);
+
             Assert.True(eRscFS.Exists(deepFilePath));
             using (var stream = eRscFS.OpenFile(deepFilePath,FileAccess.Read))
             {
@@ -42,5 +45,7 @@ namespace SharpFileSystem.Tests.FileSystems
             var recentities = eRscFS.GetEntitiesRecursive(FileSystemPath.Root);
             ;
         }
+
+
     }
 }

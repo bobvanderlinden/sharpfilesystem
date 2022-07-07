@@ -7,7 +7,6 @@ using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using SharpFileSystem;
 using SharpFileSystem.FileSystems;
-using SharpFileSystem.Resources;
 using SharpFileSystem.SevenZip;
 using SharpFileSystem.SharpZipLib;
 using Xunit;
