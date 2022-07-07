@@ -7,7 +7,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\SharpCoreFileSystem\SharpCoreFileSystem.csproj" />
-      <ProjectReference Include="..\SharpFileSystem.Resources\SharpFileSystem.Resources.csproj" />
       <ProjectReference Include="..\SharpFileSystem.SevenZip\SharpFileSystem.SevenZip.csproj" />
       <ProjectReference Include="..\SharpFileSystem.SharpZipLib\SharpFileSystem.SharpZipLib.csproj" />
     </ItemGroup>

@@ -12,7 +12,7 @@ namespace SharpFileSystem
         public static FileSystemPath Root { get; private set; }
 
         private readonly string _path;
-        
+
         public string Path
         {
             get { return _path ?? "/"; }
@@ -73,6 +73,18 @@ namespace SharpFileSystem
         private FileSystemPath(string path)
         {
             _path = path;
+        }
+
+        public static implicit operator FileSystemPath(string path) {
+            var parsed = FileSystemPath.Parse(path);
+            return parsed;
+        }
+
+        public static implicit operator string(FileSystemPath path)
+        {
+            return path.ToString();
+            var x = FileSystemPath.Parse(path);
+            return x;
         }
 
         public static bool IsRooted(string s)
