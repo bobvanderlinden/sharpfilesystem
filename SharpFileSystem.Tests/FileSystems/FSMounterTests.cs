@@ -14,7 +14,8 @@ namespace SharpFileSystem.Tests.FileSystems
             var memFs = new MemoryFileSystem();
             var embedFS = new EmbeddedResourceFileSystem(typeof(MergeFSTests).Assembly);
 
-            var mounter = new FileSystemMounter(new KeyValuePair<FileSystemPath, IFileSystem>("/memory/",memFs), new KeyValuePair<FileSystemPath, IFileSystem>("/embed/",embedFS));
+            var mounter = new FileSystemMounter(new MountPoint("/memory/",memFs), new MountPoint("/embed/",embedFS));
+            mounter = new FileSystemMounter(("/memory/",memFs), ("/embed/",embedFS));
 
             Assert.True(mounter.Exists("/embed/resDir/deepFile.txt"));
             Assert.Throws<NotSupportedException>(() => mounter.OpenFile("/embed/toto.txt", FileAccess.Write));

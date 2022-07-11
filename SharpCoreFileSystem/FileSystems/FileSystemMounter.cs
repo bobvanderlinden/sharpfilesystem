@@ -5,6 +5,19 @@ using SharpFileSystem.Collections;
 
 namespace SharpFileSystem.FileSystems
 {
+
+    public class MountPoint
+    {
+        public IFileSystem FS {get; set;}
+        public FileSystemPath Path {get; set;}
+
+        public MountPoint(FileSystemPath path, IFileSystem fs)
+        {
+            Path = path;
+            FS = fs;
+        }
+    }
+
     public class FileSystemMounter : IFileSystem
     {
         public ICollection<KeyValuePair<FileSystemPath, IFileSystem>> Mounts { get; private set; }
@@ -14,6 +27,14 @@ namespace SharpFileSystem.FileSystems
             Mounts = new SortedList<FileSystemPath, IFileSystem>(new InverseComparer<FileSystemPath>(Comparer<FileSystemPath>.Default));
             foreach(var mount in mounts)
                 Mounts.Add(mount);
+        }
+
+        public FileSystemMounter(params (FileSystemPath path, IFileSystem fs)[] mounts) : this (mounts.Select(x => new KeyValuePair<FileSystemPath, IFileSystem>(x.path,x.fs)))
+        {
+        }
+
+        public FileSystemMounter(params MountPoint[] mounts) : this (mounts.Select(x => new KeyValuePair<FileSystemPath, IFileSystem>(x.Path,x.FS)))
+        {
         }
 
         public FileSystemMounter(params KeyValuePair<FileSystemPath, IFileSystem>[] mounts)
