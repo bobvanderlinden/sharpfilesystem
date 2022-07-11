@@ -8,7 +8,7 @@ on:
   pull_request:
     branches:
       - dev
-  workflow_dispatch
+  workflow_dispatch:
 jobs:
   build:
     env:
