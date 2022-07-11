@@ -46,6 +46,17 @@ namespace SharpFileSystem.Tests.FileSystems
             Assert.Equal(2,entities.Count);
         }
 
+        [Fact]
+        void eResFSnotSupportedFeaturesTest()
+        {
+
+            EmbeddedResourceFileSystem eFS = new EmbeddedResourceFileSystem(Assembly.GetAssembly(typeof(EmbeddedRessourceFileSystemTests)));
+            Assert.True(eFS.IsReadOnly);
+            Assert.Throws<NotSupportedException>(() => eFS.CreateDirectory("/test/"));
+            Assert.Throws<NotSupportedException>(() => eFS.CreateFile("/test.txt"));
+            Assert.Throws<NotSupportedException>(() => eFS.Delete("/test.txt"));
+        }
+
 
     }
 }
