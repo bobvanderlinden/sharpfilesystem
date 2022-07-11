@@ -8,6 +8,9 @@ namespace SharpFileSystem.FileSystems
 {
     public class PhysicalFileSystem : IFileSystem
     {
+
+        public bool IsReadOnly => false;
+
         #region Internals
         public string PhysicalRoot { get; private set; }
 

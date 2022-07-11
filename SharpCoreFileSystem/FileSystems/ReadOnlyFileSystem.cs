@@ -8,6 +8,8 @@ namespace SharpFileSystem.FileSystems
 {
     public class ReadOnlyFileSystem: IFileSystem
     {
+        public bool IsReadOnly => true;
+
         public IFileSystem FileSystem { get; private set; }
 
         public ReadOnlyFileSystem(IFileSystem fileSystem)

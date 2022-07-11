@@ -31,6 +31,19 @@ namespace SharpFileSystem.Tests.FileSystems
 
             var entities = merge.GetEntities("/");
             Assert.Equal(3,entities.Count);
+
+
+            merge.CreateDirectory("/resDir/");
+            using (var stream = merge.CreateFile("/resDir/memoryFileThatMatchAnEmbeddedPath.txt"))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write("hello embed !");
+                }
+            }
+            Assert.True(merge.Exists("/resDir/memoryFileThatMatchAnEmbeddedPath.txt"));
+            content = merge.ReadAllText("/resDir/memoryFileThatMatchAnEmbeddedPath.txt");
+            Assert.Equal("hello embed !",content);
         }
     }
 }

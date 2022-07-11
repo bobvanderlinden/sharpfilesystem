@@ -7,6 +7,8 @@ namespace SharpFileSystem.FileSystems
     {
         private IFileSystem Parent { get; set; }
 
+        public bool IsReadOnly => Parent.IsReadOnly;
+
         public SealedFileSystem(IFileSystem parent)
         {
             Parent = parent;

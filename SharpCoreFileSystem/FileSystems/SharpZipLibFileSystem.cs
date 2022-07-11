@@ -24,6 +24,9 @@ namespace SharpFileSystem.FileSystems
 
     public class SharpZipLibFileSystem: IFileSystem
     {
+
+        public bool IsReadOnly => false;
+
         public ZipFile ZipFile { get; set; }
 
         public static SharpZipLibFileSystem Open(Stream s)

@@ -10,6 +10,8 @@ namespace SharpFileSystem.FileSystems
         public IFileSystem FileSystem { get; private set; }
         public FileSystemPath Root { get; private set; }
 
+
+        public bool IsReadOnly => FileSystem.IsReadOnly;
         public SubFileSystem(IFileSystem fileSystem, FileSystemPath root)
         {
             FileSystem = fileSystem;

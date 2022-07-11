@@ -20,6 +20,9 @@ namespace SharpFileSystem.FileSystems
 
     public class FileSystemMounter : IFileSystem
     {
+
+        public bool IsReadOnly => Mounts.All(x => x.Value.IsReadOnly);
+
         public ICollection<KeyValuePair<FileSystemPath, IFileSystem>> Mounts { get; private set; }
 
         public FileSystemMounter(IEnumerable<KeyValuePair<FileSystemPath, IFileSystem>> mounts)

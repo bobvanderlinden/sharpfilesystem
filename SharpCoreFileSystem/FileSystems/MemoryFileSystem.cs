@@ -8,6 +8,8 @@ namespace SharpFileSystem.FileSystems
 {
     public class MemoryFileSystem : IFileSystem
     {
+        public bool IsReadOnly => false;
+
         private IDictionary<FileSystemPath, ISet<FileSystemPath>> _directories =
     new Dictionary<FileSystemPath, ISet<FileSystemPath>>();
         private IDictionary<FileSystemPath, MemoryFile> _files =

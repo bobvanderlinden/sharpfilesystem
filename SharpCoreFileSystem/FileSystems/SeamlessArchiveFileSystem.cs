@@ -9,6 +9,8 @@ namespace SharpFileSystem.FileSystems
     {
         public IFileSystem FileSystem { get; private set; }
 
+        public bool IsReadOnly => FileSystem.IsReadOnly;
+
         public static readonly char ArchiveDirectorySeparator = '#';
 
         private FileSystemUsage _rootUsage;

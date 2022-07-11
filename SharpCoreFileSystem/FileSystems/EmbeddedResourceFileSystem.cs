@@ -19,6 +19,8 @@ namespace SharpFileSystem.FileSystems
     {
         public Assembly Assembly { get; private set; }
 
+        public bool IsReadOnly => true;
+
         private string AssemblyName => Assembly.GetShortName();
         public EmbeddedResourceFileSystem(Assembly assembly)
         {

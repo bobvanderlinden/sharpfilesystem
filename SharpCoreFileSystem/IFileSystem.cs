@@ -11,5 +11,7 @@ public interface IFileSystem: IDisposable
     Stream OpenFile(FileSystemPath path, FileAccess access);
     void CreateDirectory(FileSystemPath path);
     void Delete(FileSystemPath path);
+
+    bool IsReadOnly { get; }
 }
 }

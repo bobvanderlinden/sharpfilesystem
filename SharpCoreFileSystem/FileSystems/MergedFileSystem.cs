@@ -8,6 +8,8 @@ namespace SharpFileSystem.FileSystems
 {
     public class MergedFileSystem: IFileSystem
     {
+        public bool IsReadOnly => FileSystems.All(x => x.IsReadOnly);
+
         public IEnumerable<IFileSystem> FileSystems { get; private set; }
         public MergedFileSystem(IEnumerable<IFileSystem> fileSystems)
         {
@@ -47,9 +49,14 @@ namespace SharpFileSystem.FileSystems
             return FileSystems.FirstOrDefault(fs => fs.Exists(path));
         }
 
+        public IFileSystem GetFirstRW(FileSystemPath path)
+        {
+            return FileSystems.FirstOrDefault(fs => !fs.IsReadOnly && fs.Exists(path));
+        }
+
         public Stream CreateFile(FileSystemPath path)
         {
-            var fs = GetFirst(path) ?? FileSystems.First();
+            var fs = GetFirstRW(path) ?? FileSystems.First();
             return fs.CreateFile(path);
         }
 
@@ -65,7 +72,7 @@ namespace SharpFileSystem.FileSystems
         {
             if (Exists(path))
                 throw new ArgumentException("The specified directory already exists.");
-            var fs = GetFirst(path.ParentPath);
+            var fs = GetFirstRW(path.ParentPath);
             if (fs == null)
                 throw new ArgumentException("The directory-parent does not exist.");
             fs.CreateDirectory(path);
