@@ -83,8 +83,6 @@ namespace SharpFileSystem
         public static implicit operator string(FileSystemPath path)
         {
             return path.ToString();
-            var x = FileSystemPath.Parse(path);
-            return x;
         }
 
         public static bool IsRooted(string s)
