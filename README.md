@@ -1,6 +1,7 @@
 
 # SharpFileSystem
-![.NET Core](https://github.com/b3b00/csly/workflows/.NET%20Core/badge.svg)
+![.NET Core](https://github.com/b3b00/sharpfilesystem/workflows/.NET%20Core/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/b3b00/sharpfilesystem/badge.svg?branch=master)](https://coveralls.io/github/b3b00/sharpfilesystem?branch=master)
 
 This a repository is a fork of [bobvanderlinden/sharpfilesystem](https://github.com/bobvanderlinden/sharpfilesystem). It ports it to netstandard2.0.
 
