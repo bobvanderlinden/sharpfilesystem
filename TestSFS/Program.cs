@@ -4,13 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using ICSharpCode.SharpZipLib.Zip;
 using SharpFileSystem;
 using SharpFileSystem.FileSystems;
 using SharpFileSystem.SevenZip;
-using SharpFileSystem.SharpZipLib;
 using Xunit;
-using File = SharpFileSystem.File;
 
 namespace TestSFS
 {
@@ -24,7 +21,7 @@ namespace TestSFS
             CreateMemoryFile();
             ReadZipFS();
             WriteZipFS();
-            Read7ZipFS();
+            // Read7ZipFS();
 
         }
 

@@ -1,10 +1,7 @@
-using System;
+
 using SharpFileSystem.FileSystems;
 using System.IO;
-using System.Linq;
 using System.Text;
-using SharpFileSystem.IO;
-using SharpFileSystem.SharpZipLib;
 using Xunit;
 
 
