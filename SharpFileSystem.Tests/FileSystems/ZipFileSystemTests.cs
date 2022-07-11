@@ -18,7 +18,7 @@ namespace SharpFileSystem.Tests.FileSystems
             var dirPath = FileSystemPath.Root.AppendDirectory("dir");
             var filePath = dirPath.AppendFile("file.txt");
 
-            string zipFileName = @".\newtest.zip";
+            string zipFileName = @"./newtest.zip";
             if (System.IO.File.Exists(zipFileName))
             {
                 System.IO.File.Delete(zipFileName);
@@ -61,7 +61,7 @@ namespace SharpFileSystem.Tests.FileSystems
         void ReadZipFS()
         {
             FileSystemPath MemRootFilePath = FileSystemPath.Root.AppendFile("x");
-            var zipFileSystem = SharpZipLibFileSystem.Open(System.IO.File.Open(@".\test.zip", FileMode.Open));
+            var zipFileSystem = SharpZipLibFileSystem.Open(System.IO.File.Open(@"./test.zip", FileMode.Open));
             // File shouldn’t exist prior to creation.
             Assert.False(zipFileSystem.Exists(MemRootFilePath));
 
