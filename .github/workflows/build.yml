@@ -38,7 +38,7 @@ jobs:
         testProject: ${{env.TESTS_PROJECT}}
         output: 'lcov.info'
         outputFormat: 'lcov'
-        threshold: 50
+        threshold: 25
         excludes: '[program]*'
     - name: coveralls
       uses: coverallsapp/github-action@v1.1.1
