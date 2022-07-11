@@ -39,7 +39,7 @@ jobs:
         output: 'lcov.info'
         outputFormat: 'lcov'
         threshold: 25
-        excludes: '[program]*'
+        excludes: '[TestSFS]*,[SharpFileSystem.Tests]*,[SharFileSystem.SevenZip]*'
     - name: coveralls
       uses: coverallsapp/github-action@v1.1.1
       if: matrix.os == 'windows-latest' && env.RUN_TESTS
