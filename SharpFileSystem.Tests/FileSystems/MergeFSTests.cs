@@ -30,7 +30,7 @@ namespace SharpFileSystem.Tests.FileSystems
             Assert.Equal("deep file", content);
 
             var entities = merge.GetEntities("/");
-            Assert.Equal(3,entities.Count);
+            Assert.Equal(5,entities.Count);
 
 
             merge.CreateDirectory("/resDir/");

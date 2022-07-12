@@ -43,7 +43,7 @@ namespace SharpFileSystem.Tests.FileSystems
             }
 
             var entities = eRscFS.GetEntities(FileSystemPath.Root);
-            Assert.Equal(2,entities.Count);
+            Assert.Equal(4,entities.Count);
         }
 
         [Fact]

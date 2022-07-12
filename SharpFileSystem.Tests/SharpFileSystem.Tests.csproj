@@ -62,5 +62,9 @@
     <EmbeddedResource Include="test.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Remove="resDir\deep\deeper\deeper.txt" />
+    <EmbeddedResource Include="resDir\deep\deeper\deeper.txt" />
+    <None Remove="resDir\deep\deep.txt" />
+    <EmbeddedResource Include="resDir\deep\deep.txt" />
   </ItemGroup>
 </Project>

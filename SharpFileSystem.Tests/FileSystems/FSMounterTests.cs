@@ -31,7 +31,7 @@ namespace SharpFileSystem.Tests.FileSystems
             Assert.True(mounter.Exists("/memory/test.txt"));
 
             var embedEntities = mounter.GetEntities("/embed/");
-            Assert.Equal(2,embedEntities.Count);
+            Assert.Equal(4,embedEntities.Count);
             var memoryEntities = mounter.GetEntities("/memory/");
             Assert.Single(memoryEntities);
         }
