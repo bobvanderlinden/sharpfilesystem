@@ -3,6 +3,9 @@
 ![.NET Core](https://github.com/b3b00/sharpfilesystem/workflows/.NET%20Core/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/b3b00/sharpfilesystem/badge.svg?branch=master)](https://coveralls.io/github/b3b00/sharpfilesystem?branch=master)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/b3b00/sly/blob/dev/LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/sharpcorefilesystem.svg?kill_cache=1)](https://www.nuget.org/packages/sharpcorefilesystem)
+
 This a repository is a fork of [bobvanderlinden/sharpfilesystem](https://github.com/bobvanderlinden/sharpfilesystem). It ports it to netstandard2.0.
 
 SharpFileSystem is a [Virtual File System (VFS)](http://en.wikipedia.org/wiki/Virtual_file_system) implementation for .NET to allow access to different filesystems in the same way for normal files and directories.
