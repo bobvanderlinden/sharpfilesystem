@@ -1,6 +1,7 @@
 
 # SharpFileSystem
 ![.NET Core](https://github.com/b3b00/sharpfilesystem/workflows/.NET%20Core/badge.svg)
+
 [![Coverage Status](https://coveralls.io/repos/github/b3b00/sharpfilesystem/badge.svg?branch=master)](https://coveralls.io/github/b3b00/sharpfilesystem?branch=master)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/b3b00/sly/blob/dev/LICENSE)
