@@ -67,4 +67,7 @@
     <None Remove="resDir\deep\deep.txt" />
     <EmbeddedResource Include="resDir\deep\deep.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="FileSystems\NetZipArchiveFileSystemTest.cs" />
+  </ItemGroup>
 </Project>

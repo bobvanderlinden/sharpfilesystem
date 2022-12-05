@@ -1,9 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using ICSharpCode.SharpZipLib.Zip;
 using SharpFileSystem.IO;
 using SharpFileSystem.FileSystems;
 using Xunit;
@@ -16,14 +14,14 @@ namespace SharpFileSystem.Tests.FileSystems
         private NetZipArchiveFileSystem fileSystem;
         private string fileContentString = "this is a file";
 
-        //setup 
+        //setup
         public  NetZipArchiveFileSystemTest()
         {
             var memoryStream = new MemoryStream();
             zipStream = memoryStream;
             var zipOutput = new ZipOutputStream(zipStream);
 
-            
+
             var fileContentBytes = Encoding.ASCII.GetBytes(fileContentString);
             zipOutput.PutNextEntry(new ZipEntry("textfileA.txt")
             {
