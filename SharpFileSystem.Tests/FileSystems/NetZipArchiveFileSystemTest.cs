@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using SharpFileSystem.IO;
@@ -8,7 +9,7 @@ using Xunit;
 
 namespace SharpFileSystem.Tests.FileSystems
 {
-    public class NetZipArchiveFileSystemTest
+    public class NetZipArchiveFileSystemTest : IDisposable
     {
         private Stream zipStream;
         private NetZipArchiveFileSystem fileSystem;
@@ -17,22 +18,7 @@ namespace SharpFileSystem.Tests.FileSystems
         //setup
         public  NetZipArchiveFileSystemTest()
         {
-            var memoryStream = new MemoryStream();
-            zipStream = memoryStream;
-            var zipOutput = new ZipOutputStream(zipStream);
-
-
-            var fileContentBytes = Encoding.ASCII.GetBytes(fileContentString);
-            zipOutput.PutNextEntry(new ZipEntry("textfileA.txt")
-            {
-                Size = fileContentBytes.Length
-            });
-            zipOutput.Write(fileContentBytes);
-            zipOutput.PutNextEntry(new ZipEntry("directory/fileInDirectory.txt"));
-            zipOutput.PutNextEntry(new ZipEntry("scratchdirectory/scratch"));
-            zipOutput.Finish();
-
-            memoryStream.Position = 0;
+            zipStream = new FileStream("filesystem.zip", FileMode.Open);
             fileSystem = NetZipArchiveFileSystem.Open(zipStream);
         }
 
@@ -45,6 +31,7 @@ namespace SharpFileSystem.Tests.FileSystems
 
         private readonly FileSystemPath directoryPath = FileSystemPath.Parse("/directory/");
         private readonly FileSystemPath textfileAPath = FileSystemPath.Parse("/textfileA.txt");
+        private readonly FileSystemPath textfileBPath = FileSystemPath.Parse("/textfileB.txt");
         private readonly FileSystemPath fileInDirectoryPath = FileSystemPath.Parse("/directory/fileInDirectory.txt");
         private readonly FileSystemPath scratchDirectoryPath = FileSystemPath.Parse("/scratchdirectory/");
 
@@ -53,9 +40,10 @@ namespace SharpFileSystem.Tests.FileSystems
         {
             Assert.Equal(new[]
             {
-                textfileAPath,
                 directoryPath,
-                scratchDirectoryPath
+                scratchDirectoryPath,
+                textfileAPath,
+                textfileBPath
             }, fileSystem.GetEntities(FileSystemPath.Root).ToArray());
         }
 
@@ -91,13 +79,13 @@ namespace SharpFileSystem.Tests.FileSystems
         [Fact]
         public void CanWriteFile()
         {
-            var file = fileSystem.OpenFile(textfileAPath, FileAccess.ReadWrite);
+            var file = fileSystem.OpenFile(textfileBPath, FileAccess.ReadWrite);
             var textBytes = Encoding.ASCII.GetBytes(fileContentString + " and a new string");
             file.Write(textBytes);
             file.Close();
 
 
-            file = fileSystem.OpenFile(textfileAPath, FileAccess.ReadWrite);
+            file = fileSystem.OpenFile(textfileBPath, FileAccess.ReadWrite);
             var text = file.ReadAllText();
             Assert.True(string.Equals(text, fileContentString + " and a new string"));
         }

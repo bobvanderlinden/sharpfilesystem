@@ -16,7 +16,7 @@ namespace SharpFileSystem.FileSystems
         {
             return new NetZipArchiveFileSystem(new ZipArchive(s, ZipArchiveMode.Update, true));
         }
-        
+
         public static NetZipArchiveFileSystem OpenReadOnly(Stream s)
         {
             return new NetZipArchiveFileSystem(new ZipArchive(s, ZipArchiveMode.Read, true));
@@ -85,7 +85,7 @@ namespace SharpFileSystem.FileSystems
 
         public Stream OpenFile(FileSystemPath path, FileAccess access)
         {
-            if (access != FileAccess.Read)
+            if (ZipArchive.Mode == ZipArchiveMode.Read && access != FileAccess.Read)
                 throw new InvalidOperationException("This is a read-only filesystem.");
 
             var zae = ZipArchive.GetEntry(ToEntryPath(path));
