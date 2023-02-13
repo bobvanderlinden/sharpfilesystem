@@ -13,6 +13,7 @@ namespace SharpFileSystem.Tests.FileSystems
     {
         private Stream zipStream;
         private NetZipArchiveFileSystem fileSystem;
+        private NetZipArchiveFileSystem fileSystemReadOnly;
         private string fileContentString = "this is a file";
 
         //setup
@@ -20,6 +21,7 @@ namespace SharpFileSystem.Tests.FileSystems
         {
             zipStream = new FileStream("filesystem.zip", FileMode.Open);
             fileSystem = NetZipArchiveFileSystem.Open(zipStream);
+            fileSystemReadOnly = NetZipArchiveFileSystem.OpenReadOnly(zipStream);
         }
 
         //teardown
@@ -113,6 +115,67 @@ namespace SharpFileSystem.Tests.FileSystems
             fileSystem.CreateDirectory(fsp);
 
             Assert.True(fileSystem.Exists(fsp));
+        }
+
+        [Fact]
+        public void ReadOnlyGetEntitiesOfRootTest()
+        {
+            Assert.Equal(new[]
+            {
+                directoryPath,
+                scratchDirectoryPath,
+                textfileAPath,
+                textfileBPath
+            }, fileSystemReadOnly.GetEntities(FileSystemPath.Root).ToArray());
+        }
+
+        [Fact]
+        public void ReadOnlyGetEntitiesOfDirectoryTest()
+        {
+            Assert.Equal(new[]
+            {
+                fileInDirectoryPath
+            }, fileSystemReadOnly.GetEntities(directoryPath).ToArray());
+        }
+
+        [Fact]
+        public void ReadOnlyExistsTest()
+        {
+            Assert.True(fileSystemReadOnly.Exists(FileSystemPath.Root));
+            Assert.True(fileSystemReadOnly.Exists(textfileAPath));
+            Assert.True(fileSystemReadOnly.Exists(directoryPath));
+            Assert.True(fileSystemReadOnly.Exists(fileInDirectoryPath));
+            Assert.False(fileSystemReadOnly.Exists(FileSystemPath.Parse("/nonExistingFile")));
+            Assert.False(fileSystemReadOnly.Exists(FileSystemPath.Parse("/nonExistingDirectory/")));
+            Assert.False(fileSystemReadOnly.Exists(FileSystemPath.Parse("/directory/nonExistingFileInDirectory")));
+        }
+
+        [Fact]
+        public void ReadOnlyCanReadFile()
+        {
+            var file = fileSystemReadOnly.OpenFile(textfileAPath, FileAccess.Read);
+            var text = file.ReadAllText();
+            Assert.True(string.Equals(text, fileContentString));
+        }
+
+        [Fact]
+        public void ReadOnlyCanNotWriteFile()
+        {
+            Assert.Throws<InvalidOperationException>(() => fileSystemReadOnly.OpenFile(textfileBPath, FileAccess.ReadWrite));
+        }
+
+        [Fact]
+        public void ReadOnlyCanNotAddFile()
+        {
+            var fsp = FileSystemPath.Parse("/scratchdirectory/recentlyadded.txt");
+            Assert.Throws<InvalidOperationException>(() => fileSystemReadOnly.CreateFile(fsp));
+        }
+
+        [Fact]
+        public void ReadOnlyCanNotAddDirectory()
+        {
+            var fsp = FileSystemPath.Parse("/scratchdirectory/dir/");
+            Assert.Throws<InvalidOperationException>(() => fileSystemReadOnly.CreateDirectory(fsp));
         }
     }
 }
