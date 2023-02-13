@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.IO.Compression;
@@ -12,8 +13,13 @@ namespace SharpFileSystem.FileSystems
         public bool IsReadOnly => false;
 
         public static NetZipArchiveFileSystem Open(Stream s)
-        { 
-            return new NetZipArchiveFileSystem(new ZipArchive(s,ZipArchiveMode.Update,true));
+        {
+            return new NetZipArchiveFileSystem(new ZipArchive(s, ZipArchiveMode.Update, true));
+        }
+        
+        public static NetZipArchiveFileSystem OpenReadOnly(Stream s)
+        {
+            return new NetZipArchiveFileSystem(new ZipArchive(s, ZipArchiveMode.Read, true));
         }
 
         public static NetZipArchiveFileSystem Create(Stream s)
@@ -70,23 +76,35 @@ namespace SharpFileSystem.FileSystems
 
         public Stream CreateFile(FileSystemPath path)
         {
+            if (ZipArchive.Mode == ZipArchiveMode.Read)
+                throw new InvalidOperationException("This is a read-only filesystem.");
+
             var zae = ZipArchive.CreateEntry(ToEntryPath(path));
             return zae.Open();
         }
 
         public Stream OpenFile(FileSystemPath path, FileAccess access)
         {
+            if (access != FileAccess.Read)
+                throw new InvalidOperationException("This is a read-only filesystem.");
+
             var zae = ZipArchive.GetEntry(ToEntryPath(path));
             return zae.Open();
         }
 
         public void CreateDirectory(FileSystemPath path)
         {
+            if (ZipArchive.Mode == ZipArchiveMode.Read)
+                throw new InvalidOperationException("This is a read-only filesystem.");
+
             ZipArchive.CreateEntry(ToEntryPath(path));
         }
 
         public void Delete(FileSystemPath path)
         {
+            if (ZipArchive.Mode == ZipArchiveMode.Read)
+                throw new InvalidOperationException("This is a read-only filesystem.");
+
             var zae = ZipArchive.GetEntry(ToEntryPath(path));
             zae.Delete();
         }
