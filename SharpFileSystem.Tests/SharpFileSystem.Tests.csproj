@@ -36,10 +36,6 @@
       </PackageReference>
     <PackageReference Include="AssertNet.Xunit" Version="1.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-    <!-- <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19554-01">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference> -->
     <PackageReference Include="NUnit" Version="3.12.0" />    
     <PackageReference Include="System.Memory" Version="4.5.3" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
@@ -65,8 +61,8 @@
     <EmbeddedResource Include="resDir\deep\deeper\deeper.txt" />
     <None Remove="resDir\deep\deep.txt" />
     <EmbeddedResource Include="resDir\deep\deep.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="FileSystems\NetZipArchiveFileSystemTest.cs" />
+    <None Update="filesystem.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
