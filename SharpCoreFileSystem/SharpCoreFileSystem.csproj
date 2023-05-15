@@ -6,11 +6,11 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <Description>A virtual file system for .NET written in C#</Description>
     <Authors>b3b00</Authors>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
     <PackageProjectUrl>https://github.com/b3b00/sharpfilesystem</PackageProjectUrl>
     <RepositoryUrl>https://github.com/b3b00/sharpfilesystem</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/b3b00/sharpfilesystem/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageVersion>1.0.8</PackageVersion>
+    <PackageVersion>1.0.9</PackageVersion>
     <RootNamespace>SharpFileSystem</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
