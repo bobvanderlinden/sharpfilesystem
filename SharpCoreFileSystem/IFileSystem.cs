@@ -12,6 +12,10 @@ public interface IFileSystem: IDisposable
     void CreateDirectory(FileSystemPath path);
     void Delete(FileSystemPath path);
 
+    ICollection<FileSystemPath> GetDirectories(FileSystemPath path);
+
+    ICollection<FileSystemPath> GetFiles(FileSystemPath path);
+
     bool IsReadOnly { get; }
 }
 }

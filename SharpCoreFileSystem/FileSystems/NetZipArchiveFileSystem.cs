@@ -6,11 +6,11 @@ using System.IO.Compression;
 
 namespace SharpFileSystem.FileSystems
 {
-    public class NetZipArchiveFileSystem : IFileSystem
+    public class NetZipArchiveFileSystem : AbstractFileSystem
     {
         public ZipArchive ZipArchive { get; private set; }
 
-        public bool IsReadOnly => false;
+        public override bool IsReadOnly => false;
 
         public static NetZipArchiveFileSystem Open(Stream s)
         {
@@ -31,7 +31,7 @@ namespace SharpFileSystem.FileSystems
         {
             ZipArchive = archive;
         }
-        public void Dispose()
+        public override void Dispose()
         {
             ZipArchive.Dispose();
         }
@@ -54,7 +54,7 @@ namespace SharpFileSystem.FileSystems
         {
             return ZipArchive.GetEntry(ToEntryPath(path));
         }
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
+        public override ICollection<FileSystemPath> GetEntities(FileSystemPath path)
         {
             return GetZipEntries().Select(ToPath).Where(path.IsParentOf)
                 .Select(entryPath => entryPath.ParentPath == path
@@ -65,7 +65,7 @@ namespace SharpFileSystem.FileSystems
                 .ToList();
         }
 
-        public bool Exists(FileSystemPath path)
+        public override bool Exists(FileSystemPath path)
         {
             if (path.IsFile)
                 return ToEntry(path) != null;
@@ -74,7 +74,7 @@ namespace SharpFileSystem.FileSystems
                 .Any(entryPath => entryPath.IsChildOf(path) || entryPath.Equals(path));
         }
 
-        public Stream CreateFile(FileSystemPath path)
+        public override Stream CreateFile(FileSystemPath path)
         {
             if (ZipArchive.Mode == ZipArchiveMode.Read)
                 throw new InvalidOperationException("This is a read-only filesystem.");
@@ -83,7 +83,7 @@ namespace SharpFileSystem.FileSystems
             return zae.Open();
         }
 
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
+        public override Stream OpenFile(FileSystemPath path, FileAccess access)
         {
             if (ZipArchive.Mode == ZipArchiveMode.Read && access != FileAccess.Read)
                 throw new InvalidOperationException("This is a read-only filesystem.");
@@ -92,7 +92,7 @@ namespace SharpFileSystem.FileSystems
             return zae.Open();
         }
 
-        public void CreateDirectory(FileSystemPath path)
+        public override void CreateDirectory(FileSystemPath path)
         {
             if (ZipArchive.Mode == ZipArchiveMode.Read)
                 throw new InvalidOperationException("This is a read-only filesystem.");
@@ -100,7 +100,7 @@ namespace SharpFileSystem.FileSystems
             ZipArchive.CreateEntry(ToEntryPath(path));
         }
 
-        public void Delete(FileSystemPath path)
+        public override void Delete(FileSystemPath path)
         {
             if (ZipArchive.Mode == ZipArchiveMode.Read)
                 throw new InvalidOperationException("This is a read-only filesystem.");

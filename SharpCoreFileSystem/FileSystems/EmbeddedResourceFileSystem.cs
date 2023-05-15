@@ -15,11 +15,12 @@ namespace SharpFileSystem.FileSystems
             return assembly.FullName.Split(new[] {','}).First();
         }
     }
-    public class EmbeddedResourceFileSystem : IFileSystem
+    public class EmbeddedResourceFileSystem : AbstractFileSystem
     {
         public Assembly Assembly { get; private set; }
 
-        public bool IsReadOnly => true;
+
+        public override bool IsReadOnly => true;
 
         private string AssemblyName => Assembly.GetShortName();
         public EmbeddedResourceFileSystem(Assembly assembly)
@@ -27,7 +28,7 @@ namespace SharpFileSystem.FileSystems
             Assembly = assembly;
         }
 
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
+        public override ICollection<FileSystemPath> GetEntities(FileSystemPath path)
         {
             if (!path.IsRoot)
                 throw new DirectoryNotFoundException();
@@ -47,12 +48,12 @@ namespace SharpFileSystem.FileSystems
             //return Assembly.GetManifestResourceNames().Select(name => FileSystemPath.Root.AppendFile(name.Replace(AssemblyName+".",""))).ToArray();
         }
 
-        public bool Exists(FileSystemPath path)
+        public override bool Exists(FileSystemPath path)
         {
             return path.IsRoot || !path.IsDirectory && Assembly.GetManifestResourceNames().Contains($"{AssemblyName}.{path.Path.Substring(1).Replace("/",".")}");
         }
 
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
+        public override Stream OpenFile(FileSystemPath path, FileAccess access)
         {
             if (access == FileAccess.Write)
                 throw new NotSupportedException();
@@ -61,22 +62,24 @@ namespace SharpFileSystem.FileSystems
             return Assembly.GetManifestResourceStream($"{AssemblyName}.{path.Path.Substring(1).Replace("/",".")}");
         }
 
-        public Stream CreateFile(FileSystemPath path)
+        public override Stream CreateFile(FileSystemPath path)
         {
             throw new NotSupportedException();
         }
 
-        public void CreateDirectory(FileSystemPath path)
+        public override void CreateDirectory(FileSystemPath path)
         {
             throw new NotSupportedException();
         }
 
-        public void Delete(FileSystemPath path)
+        public override void Delete(FileSystemPath path)
         {
             throw new NotSupportedException();
         }
 
-        public void Dispose()
+
+
+        public override void Dispose()
         {
         }
     }

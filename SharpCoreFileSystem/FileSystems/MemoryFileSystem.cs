@@ -6,9 +6,9 @@ using System.Text;
 
 namespace SharpFileSystem.FileSystems
 {
-    public class MemoryFileSystem : IFileSystem
+    public class MemoryFileSystem : AbstractFileSystem
     {
-        public bool IsReadOnly => false;
+        public override bool IsReadOnly => false;
 
         private IDictionary<FileSystemPath, ISet<FileSystemPath>> _directories =
     new Dictionary<FileSystemPath, ISet<FileSystemPath>>();
@@ -19,7 +19,7 @@ namespace SharpFileSystem.FileSystems
             _directories.Add(FileSystemPath.Root, new HashSet<FileSystemPath>());
         }
 
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
+        public override ICollection<FileSystemPath> GetEntities(FileSystemPath path)
         {
             if (!path.IsDirectory)
                 throw new ArgumentException("The specified path is no directory.", "path");
@@ -29,12 +29,12 @@ namespace SharpFileSystem.FileSystems
             return subentities;
         }
 
-        public bool Exists(FileSystemPath path)
+        public override bool Exists(FileSystemPath path)
         {
             return path.IsDirectory ? _directories.ContainsKey(path) : _files.ContainsKey(path);
         }
 
-        public Stream CreateFile(FileSystemPath path)
+        public override Stream CreateFile(FileSystemPath path)
         {
             if (!path.IsFile)
                 throw new ArgumentException("The specified path is no file.", "path");
@@ -44,7 +44,7 @@ namespace SharpFileSystem.FileSystems
             return new MemoryFileStream(_files[path] = new MemoryFile());
         }
 
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
+        public override Stream OpenFile(FileSystemPath path, FileAccess access)
         {
             if (!path.IsFile)
                 throw new ArgumentException("The specified path is no file.", "path");
@@ -54,7 +54,7 @@ namespace SharpFileSystem.FileSystems
             return new MemoryFileStream(file);
         }
 
-        public void CreateDirectory(FileSystemPath path)
+        public override void CreateDirectory(FileSystemPath path)
         {
             if (!path.IsDirectory)
                 throw new ArgumentException("The specified path is no directory.", "path");
@@ -67,7 +67,7 @@ namespace SharpFileSystem.FileSystems
             _directories[path] = new HashSet<FileSystemPath>();
         }
 
-        public void Delete(FileSystemPath path)
+        public override void Delete(FileSystemPath path)
         {
             if (path.IsRoot)
                 throw new ArgumentException("The root cannot be deleted.");
@@ -82,7 +82,7 @@ namespace SharpFileSystem.FileSystems
             parent.Remove(path);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
         }
 

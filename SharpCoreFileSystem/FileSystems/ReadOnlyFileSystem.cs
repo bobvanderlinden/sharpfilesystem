@@ -8,6 +8,8 @@ namespace SharpFileSystem.FileSystems
 {
     public class ReadOnlyFileSystem: IFileSystem
     {
+        public ICollection<FileSystemPath> GetFiles(FileSystemPath path) => FileSystem.GetFiles(path);
+
         public bool IsReadOnly => true;
 
         public IFileSystem FileSystem { get; private set; }
@@ -53,5 +55,8 @@ namespace SharpFileSystem.FileSystems
         {
             throw new InvalidOperationException("This is a read-only filesystem.");
         }
+
+        public ICollection<FileSystemPath> GetDirectories(FileSystemPath path) => FileSystem.GetDirectories(path);
+
     }
 }

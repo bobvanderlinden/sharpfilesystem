@@ -18,10 +18,10 @@ namespace SharpFileSystem.FileSystems
         }
     }
 
-    public class FileSystemMounter : IFileSystem
+    public class FileSystemMounter : AbstractFileSystem
     {
 
-        public bool IsReadOnly => Mounts.All(x => x.Value.IsReadOnly);
+        public override bool IsReadOnly => Mounts.All(x => x.Value.IsReadOnly);
 
         public ICollection<KeyValuePair<FileSystemPath, IFileSystem>> Mounts { get; private set; }
 
@@ -50,44 +50,44 @@ namespace SharpFileSystem.FileSystems
             return Mounts.First(pair => pair.Key == path || pair.Key.IsParentOf(path));
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             foreach (var mount in Mounts.Select(p => p.Value))
                 mount.Dispose();
         }
 
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
+        public override ICollection<FileSystemPath> GetEntities(FileSystemPath path)
         {
             var pair = Get(path);
             var entities = pair.Value.GetEntities(path.IsRoot ? path : path.RemoveParent(pair.Key));
             return new EnumerableCollection<FileSystemPath>(entities.Select(p => pair.Key.AppendPath(p)), entities.Count);
         }
 
-        public bool Exists(FileSystemPath path)
+        public override bool Exists(FileSystemPath path)
         {
             var pair = Get(path);
             return pair.Value.Exists(path.RemoveParent(pair.Key));
         }
 
-        public Stream CreateFile(FileSystemPath path)
+        public override Stream CreateFile(FileSystemPath path)
         {
             var pair = Get(path);
             return pair.Value.CreateFile(path.RemoveParent(pair.Key));
         }
 
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
+        public override Stream OpenFile(FileSystemPath path, FileAccess access)
         {
             var pair = Get(path);
             return pair.Value.OpenFile(path.RemoveParent(pair.Key), access);
         }
 
-        public void CreateDirectory(FileSystemPath path)
+        public override void CreateDirectory(FileSystemPath path)
         {
             var pair = Get(path);
             pair.Value.CreateDirectory(path.RemoveParent(pair.Key));
         }
 
-        public void Delete(FileSystemPath path)
+        public override void Delete(FileSystemPath path)
         {
             var pair = Get(path);
             pair.Value.Delete(path.RemoveParent(pair.Key));

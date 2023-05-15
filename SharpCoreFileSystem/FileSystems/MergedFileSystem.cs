@@ -6,9 +6,9 @@ using System.Text;
 
 namespace SharpFileSystem.FileSystems
 {
-    public class MergedFileSystem: IFileSystem
+    public class MergedFileSystem: AbstractFileSystem
     {
-        public bool IsReadOnly => FileSystems.All(x => x.IsReadOnly);
+        public override bool IsReadOnly => FileSystems.All(x => x.IsReadOnly);
 
         public IEnumerable<IFileSystem> FileSystems { get; private set; }
         public MergedFileSystem(IEnumerable<IFileSystem> fileSystems)
@@ -21,13 +21,13 @@ namespace SharpFileSystem.FileSystems
             FileSystems = fileSystems.ToArray();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             foreach(var fs in FileSystems)
                 fs.Dispose();
         }
 
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
+        public override ICollection<FileSystemPath> GetEntities(FileSystemPath path)
         {
             var entities = new SortedList<FileSystemPath, FileSystemPath>();
             foreach (var fs in FileSystems.Where(fs => fs.Exists(path)))
@@ -39,7 +39,7 @@ namespace SharpFileSystem.FileSystems
             return entities.Values;
         }
 
-        public bool Exists(FileSystemPath path)
+        public override bool Exists(FileSystemPath path)
         {
             return FileSystems.Any(fs => fs.Exists(path));
         }
@@ -54,13 +54,13 @@ namespace SharpFileSystem.FileSystems
             return FileSystems.FirstOrDefault(fs => !fs.IsReadOnly && fs.Exists(path));
         }
 
-        public Stream CreateFile(FileSystemPath path)
+        public override Stream CreateFile(FileSystemPath path)
         {
             var fs = GetFirstRW(path) ?? FileSystems.First();
             return fs.CreateFile(path);
         }
 
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
+        public override Stream OpenFile(FileSystemPath path, FileAccess access)
         {
             var fs = GetFirst(path);
             if (fs == null)
@@ -68,7 +68,7 @@ namespace SharpFileSystem.FileSystems
             return fs.OpenFile(path, access);
         }
 
-        public void CreateDirectory(FileSystemPath path)
+        public override void CreateDirectory(FileSystemPath path)
         {
             if (Exists(path))
                 throw new ArgumentException("The specified directory already exists.");
@@ -78,7 +78,7 @@ namespace SharpFileSystem.FileSystems
             fs.CreateDirectory(path);
         }
 
-        public void Delete(FileSystemPath path)
+        public override void Delete(FileSystemPath path)
         {
             foreach(var fs in FileSystems.Where(fs => fs.Exists(path)))
                 fs.Delete(path);

@@ -6,10 +6,9 @@ using SharpFileSystem.Collections;
 
 namespace SharpFileSystem.FileSystems
 {
-    public class PhysicalFileSystem : IFileSystem
+    public class PhysicalFileSystem : AbstractFileSystem
     {
-
-        public bool IsReadOnly => false;
+        public override bool IsReadOnly => false;
 
         #region Internals
         public string PhysicalRoot { get; private set; }
@@ -48,7 +47,7 @@ namespace SharpFileSystem.FileSystems
 
         #endregion
 
-        public ICollection<FileSystemPath> GetEntities(FileSystemPath path)
+        public override ICollection<FileSystemPath> GetEntities(FileSystemPath path)
         {
             string physicalPath = GetPhysicalPath(path);
             string[] directories = System.IO.Directory.GetDirectories(physicalPath);
@@ -60,33 +59,33 @@ namespace SharpFileSystem.FileSystems
             return new EnumerableCollection<FileSystemPath>(virtualDirectories.Concat(virtualFiles), directories.Length + files.Length);
         }
 
-        public bool Exists(FileSystemPath path)
+        public override  bool Exists(FileSystemPath path)
         {
             return path.IsFile ? System.IO.File.Exists(GetPhysicalPath(path)) : System.IO.Directory.Exists(GetPhysicalPath(path));
         }
 
-        public Stream CreateFile(FileSystemPath path)
+        public override Stream CreateFile(FileSystemPath path)
         {
             if (!path.IsFile)
                 throw new ArgumentException("The specified path is not a file.", "path");
             return System.IO.File.Create(GetPhysicalPath(path));
         }
 
-        public Stream OpenFile(FileSystemPath path, FileAccess access)
+        public override Stream OpenFile(FileSystemPath path, FileAccess access)
         {
             if (!path.IsFile)
                 throw new ArgumentException("The specified path is not a file.", "path");
             return System.IO.File.Open(GetPhysicalPath(path), FileMode.Open, access);
         }
 
-        public void CreateDirectory(FileSystemPath path)
+        public override void CreateDirectory(FileSystemPath path)
         {
             if (!path.IsDirectory)
                 throw new ArgumentException("The specified path is not a directory.", "path");
             System.IO.Directory.CreateDirectory(GetPhysicalPath(path));
         }
 
-        public void Delete(FileSystemPath path)
+        public override void Delete(FileSystemPath path)
         {
             if (path.IsFile)
                 System.IO.File.Delete(GetPhysicalPath(path));
@@ -94,7 +93,17 @@ namespace SharpFileSystem.FileSystems
                 System.IO.Directory.Delete(GetPhysicalPath(path), true);
         }
 
-        public void Dispose()
+        public new ICollection<FileSystemPath> GetDirectories(FileSystemPath path)
+        {
+            return System.IO.Directory.GetDirectories(path).Select(x => (FileSystemPath)x).ToList();
+        }
+
+        public new ICollection<FileSystemPath> GetFiles(FileSystemPath path)
+        {
+            return System.IO.Directory.GetFiles(path).Select(x => (FileSystemPath)x).ToList();
+        }
+
+        public override  void Dispose()
         {
         }
     }
