@@ -31,7 +31,6 @@ namespace SharpFileSystem.Tests.FileSystems
             System.IO.Directory.CreateDirectory(Root);
             AbsoluteFileName = Path.Combine(Root, FileName);
             FileSystem = new PhysicalFileSystem(Root);
-
         }
 
         public void Dispose()
@@ -116,6 +115,18 @@ namespace SharpFileSystem.Tests.FileSystems
                     new byte[] { },
                     stream.ReadAllBytes());
             }
+        }
+
+        [Fact]
+        public void ChRootedPFS()
+        {
+            FileSystem.CreateDirectory("/root/");
+            FileSystem.ChRoot("/root");
+            FileSystem.WriteAllText("/test.root.txt","test");
+            var physicalPath = Path.Combine(FileSystem.PhysicalRoot, "root", "test.root.txt");
+            Assert.True(System.IO.File.Exists(physicalPath));
+            var content = System.IO.File.ReadAllText(physicalPath);
+            Assert.Equal("test",content);
         }
     }
 }

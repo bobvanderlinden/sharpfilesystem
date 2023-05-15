@@ -6,6 +6,8 @@ namespace SharpFileSystem.FileSystems
 {
     public abstract class AbstractFileSystem : IFileSystem
     {
+        protected FileSystemPath Root { get; set; }
+
         public abstract ICollection<FileSystemPath> GetEntities(FileSystemPath path);
         public abstract bool Exists(FileSystemPath path);
         public abstract Stream CreateFile(FileSystemPath path);
@@ -17,6 +19,13 @@ namespace SharpFileSystem.FileSystems
         {
             var files = GetEntities(path).Where(x => x.IsFile).ToList();
             return files;
+        }
+
+
+
+        public void ChRoot(FileSystemPath newRoot)
+        {
+            Root = newRoot;
         }
 
         public ICollection<FileSystemPath> GetDirectories(FileSystemPath path)

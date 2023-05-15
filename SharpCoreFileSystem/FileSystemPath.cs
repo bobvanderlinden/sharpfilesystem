@@ -18,6 +18,19 @@ namespace SharpFileSystem
             get { return _path ?? "/"; }
         }
 
+        public string PathWithoutLeadingSlash
+        {
+            get
+            {
+                if (_path != null && _path.StartsWith("/"))
+                {
+                    return _path.Substring(1);
+                }
+
+                return _path;
+            }
+        }
+
         public bool IsDirectory
         {
             get { return Path[Path.Length - 1] == DirectorySeparator; }
@@ -76,8 +89,13 @@ namespace SharpFileSystem
         }
 
         public static implicit operator FileSystemPath(string path) {
-            var parsed = FileSystemPath.Parse(path);
-            return parsed;
+            if (path != null)
+            {
+                var parsed =  FileSystemPath.Parse(path) ;
+                return parsed;
+            }
+
+            return null;
         }
 
         public static implicit operator string(FileSystemPath path)
@@ -95,7 +113,7 @@ namespace SharpFileSystem
         public static FileSystemPath Parse(string s)
         {
             if (s == null)
-                throw new ArgumentNullException("s");
+                throw new ArgumentNullException("path");
             if (!IsRooted(s))
                 throw new ParseException(s, "Path is not rooted");
             if (s.Contains(string.Concat(DirectorySeparator, DirectorySeparator)))

@@ -24,7 +24,12 @@ namespace SharpFileSystem.FileSystems
 
         public string GetPhysicalPath(FileSystemPath path)
         {
-            return Path.Combine(PhysicalRoot, path.ToString().Remove(0, 1).Replace(FileSystemPath.DirectorySeparator, Path.DirectorySeparatorChar));
+            string root = PhysicalRoot;
+            if (!Root.IsRoot)
+            {
+                root = Path.Combine(PhysicalRoot, Root.PathWithoutLeadingSlash);
+            }
+            return Path.Combine(root, path.ToString().Remove(0, 1).Replace(FileSystemPath.DirectorySeparator, Path.DirectorySeparatorChar));
         }
 
         public FileSystemPath GetVirtualFilePath(string physicalPath)

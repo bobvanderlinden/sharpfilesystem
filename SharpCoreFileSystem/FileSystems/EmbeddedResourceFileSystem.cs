@@ -38,19 +38,55 @@ namespace SharpFileSystem.FileSystems
             foreach (var resource in resources)
             {
                 var res = resource.Replace(AssemblyName + ".", "");
+
                 var elements = res.Split(new[] { '.' });
                 var resourcePath = elements.Take(elements.Length - 2);
-                var entityPath = "/"+string.Join("/", resourcePath) + elements[elements.Length - 2] + "." + elements[elements.Length - 1];
-                entities.Add(entityPath);
+
+                string filename = elements[elements.Length - 2] + "." + elements[elements.Length - 1];
+
+                string entityPath = "";
+                if (resourcePath.Any())
+                {
+                    entityPath = "/" + string.Join("/", resourcePath) + "/" + filename;
+                }
+                else
+                {
+                    entityPath = "/" + filename;
+                }
+
+                if (!Root.IsRoot && entityPath.StartsWith(Root))
+                {
+                    entityPath = entityPath.Replace(Root.Path, "");
+                    if (!entityPath.StartsWith("/"))
+                    {
+                        entityPath = "/" + entityPath;
+                    }
+                        entities.Add(entityPath);
+                }
+                else if (Root.IsRoot)
+                {
+                    entities.Add(entityPath);
+                }
             }
 
             return entities;
             //return Assembly.GetManifestResourceNames().Select(name => FileSystemPath.Root.AppendFile(name.Replace(AssemblyName+".",""))).ToArray();
         }
 
+        private string GetResourceName(FileSystemPath path)
+        {
+            var root = Root.IsRoot ? "" : Root.PathWithoutLeadingSlash.Replace("/", ".") ?? "";
+            if (!string.IsNullOrEmpty(root) && !root.EndsWith("."))
+            {
+                root += ".";
+            }
+            return $"{AssemblyName}.{root}{path.Path.Substring(1).Replace("/",".")}";
+        }
+
         public override bool Exists(FileSystemPath path)
         {
-            return path.IsRoot || !path.IsDirectory && Assembly.GetManifestResourceNames().Contains($"{AssemblyName}.{path.Path.Substring(1).Replace("/",".")}");
+            var resourceName = GetResourceName(path);
+            return path.IsRoot || !path.IsDirectory && Assembly.GetManifestResourceNames().Contains(GetResourceName(path));
         }
 
         public override Stream OpenFile(FileSystemPath path, FileAccess access)
@@ -59,7 +95,7 @@ namespace SharpFileSystem.FileSystems
                 throw new NotSupportedException();
             // if (path.IsDirectory || path.ParentPath != FileSystemPath.Root)
             //     throw new FileNotFoundException();
-            return Assembly.GetManifestResourceStream($"{AssemblyName}.{path.Path.Substring(1).Replace("/",".")}");
+            return Assembly.GetManifestResourceStream(GetResourceName(path));
         }
 
         public override Stream CreateFile(FileSystemPath path)

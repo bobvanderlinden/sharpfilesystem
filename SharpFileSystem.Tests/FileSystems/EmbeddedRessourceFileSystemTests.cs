@@ -47,6 +47,25 @@ namespace SharpFileSystem.Tests.FileSystems
         }
 
         [Fact]
+        void chrootedeResFSTest()
+        {
+            string content = "test embedded resource";
+            string deepContent = "deep file";
+            var filePath = FileSystemPath.Root.AppendFile("test.txt");
+            var resDir = FileSystemPath.Root.AppendDirectory("resDir");
+            var deepFilePath = resDir.AppendFile("deepFile.txt");
+
+            EmbeddedResourceFileSystem eRscFS = new EmbeddedResourceFileSystem(Assembly.GetAssembly(typeof(EmbeddedRessourceFileSystemTests)));
+            eRscFS.ChRoot(resDir);
+
+
+            var entities = eRscFS.GetEntities(FileSystemPath.Root);
+            Assert.Equal(3,entities.Count);
+
+            Assert.True(eRscFS.Exists("/deep/deep.txt"));
+        }
+
+        [Fact]
         void eResFSnotSupportedFeaturesTest()
         {
 

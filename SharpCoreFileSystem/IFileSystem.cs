@@ -16,6 +16,8 @@ public interface IFileSystem: IDisposable
 
     ICollection<FileSystemPath> GetFiles(FileSystemPath path);
 
+    void ChRoot(FileSystemPath newRoot);
+
     bool IsReadOnly { get; }
 }
 }
