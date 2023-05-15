@@ -31,7 +31,20 @@ namespace SharpFileSystem.FileSystems
         {
             if (!path.IsRoot)
                 throw new DirectoryNotFoundException();
-            return Assembly.GetManifestResourceNames().Select(name => FileSystemPath.Root.AppendFile(name.Replace(AssemblyName+".",""))).ToArray();
+            var entities = new List<FileSystemPath>();
+            var resources = Assembly.GetManifestResourceNames();
+
+            foreach (var resource in resources)
+            {
+                var res = resource.Replace(AssemblyName + ".", "");
+                var elements = res.Split(new[] { '.' });
+                var resourcePath = elements.Take(elements.Length - 2);
+                var entityPath = "/"+string.Join("/", resourcePath) + elements[elements.Length - 2] + "." + elements[elements.Length - 1];
+                entities.Add(entityPath);
+            }
+
+            return entities;
+            //return Assembly.GetManifestResourceNames().Select(name => FileSystemPath.Root.AppendFile(name.Replace(AssemblyName+".",""))).ToArray();
         }
 
         public bool Exists(FileSystemPath path)

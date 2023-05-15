@@ -6,11 +6,11 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <Description>A virtual file system for .NET written in C#</Description>
     <Authors>b3b00</Authors>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <PackageProjectUrl>https://github.com/b3b00/sharpfilesystem</PackageProjectUrl>
     <RepositoryUrl>https://github.com/b3b00/sharpfilesystem</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/b3b00/sharpfilesystem/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageVersion>1.0.7</PackageVersion>
+    <PackageVersion>1.0.8</PackageVersion>
     <RootNamespace>SharpFileSystem</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
@@ -29,7 +29,7 @@
     <!-- <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19270-01">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
-    </PackageReference> -->      
+    </PackageReference> -->
     <PackageReference Include="System.Memory" Version="4.5.3" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
