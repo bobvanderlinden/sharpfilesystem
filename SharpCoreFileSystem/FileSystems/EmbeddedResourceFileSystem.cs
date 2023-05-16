@@ -30,8 +30,6 @@ namespace SharpFileSystem.FileSystems
 
         public override ICollection<FileSystemPath> GetEntities(FileSystemPath path)
         {
-            if (!path.IsRoot)
-                throw new DirectoryNotFoundException();
             var entities = new List<FileSystemPath>();
             var resources = Assembly.GetManifestResourceNames();
 
@@ -47,19 +45,25 @@ namespace SharpFileSystem.FileSystems
                 string entityPath = "";
                 if (resourcePath.Any())
                 {
-                    entityPath = "/" + string.Join("/", resourcePath) + "/" + filename;
+                    entityPath = FileSystemPath.DirectorySeparator + string.Join(FileSystemPath.DirectorySeparator.ToString(), resourcePath) + FileSystemPath.DirectorySeparator + filename;
                 }
                 else
                 {
-                    entityPath = "/" + filename;
+                    entityPath = FileSystemPath.DirectorySeparator + filename;
                 }
 
-                if (!Root.IsRoot && entityPath.StartsWith(Root))
+
+                var rootedRoot = path.IsRoot ? Root : Root.AppendPath(path);
+                if (!rootedRoot.Path.EndsWith(FileSystemPath.DirectorySeparator.ToString()))
+                {
+                    rootedRoot += FileSystemPath.DirectorySeparator;
+                }
+                if (!Root.IsRoot && entityPath.StartsWith(rootedRoot))
                 {
                     entityPath = entityPath.Replace(Root.Path, "");
-                    if (!entityPath.StartsWith("/"))
+                    if (!entityPath.StartsWith(FileSystemPath.DirectorySeparator.ToString()))
                     {
-                        entityPath = "/" + entityPath;
+                        entityPath = FileSystemPath.DirectorySeparator + entityPath;
                     }
                         entities.Add(entityPath);
                 }
@@ -75,12 +79,12 @@ namespace SharpFileSystem.FileSystems
 
         private string GetResourceName(FileSystemPath path)
         {
-            var root = Root.IsRoot ? "" : Root.PathWithoutLeadingSlash.Replace("/", ".") ?? "";
+            var root = Root.IsRoot ? "" : Root.PathWithoutLeadingSlash.Replace(FileSystemPath.DirectorySeparator.ToString(), ".") ?? "";
             if (!string.IsNullOrEmpty(root) && !root.EndsWith("."))
             {
                 root += ".";
             }
-            return $"{AssemblyName}.{root}{path.Path.Substring(1).Replace("/",".")}";
+            return $"{AssemblyName}.{root}{path.Path.Substring(1).Replace(FileSystemPath.DirectorySeparator.ToString(),".")}";
         }
 
         public override bool Exists(FileSystemPath path)

@@ -268,5 +268,34 @@ namespace SharpFileSystem
         {
             return !(pathA == pathB);
         }
+
+        public bool IsRootedBy(FileSystemPath path)
+        {
+            if (path.IsRoot)
+            {
+                return true;
+            }
+            var rootSegments = path.GetDirectorySegments();
+            var segments = GetDirectorySegments();
+            if (rootSegments.Length <= segments.Length)
+            {
+                int i = 0;
+                while (i < rootSegments.Length)
+                {
+                    var rootSegment = rootSegments[i];
+                    var segment = segments[i];
+                    if (rootSegment != segment)
+                    {
+                        return false;
+                    }
+                    i++;
+                }
+
+                return true;
+
+            }
+
+            return false;
+        }
     }
 }

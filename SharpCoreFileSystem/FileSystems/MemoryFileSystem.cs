@@ -23,10 +23,11 @@ namespace SharpFileSystem.FileSystems
         {
             if (!path.IsDirectory)
                 throw new ArgumentException("The specified path is no directory.", "path");
-            ISet<FileSystemPath> subentities;
-            if (!_directories.TryGetValue(path, out subentities))
-                throw new DirectoryNotFoundException();
-            return subentities;
+            ISet<MemoryFile> subentities;
+
+            var files = _files.Where(x => x.Key.IsRootedBy(path)).Select(x => x.Key).ToList();
+
+            return files;
         }
 
         public override bool Exists(FileSystemPath path)

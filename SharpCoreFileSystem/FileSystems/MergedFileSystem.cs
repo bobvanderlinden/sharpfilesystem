@@ -92,5 +92,18 @@ namespace SharpFileSystem.FileSystems
                 fileSystem.ChRoot(root);
             }
         }
+
+        public virtual ICollection<FileSystemPath> GetFiles(FileSystemPath path)
+        {
+            var files = FileSystems.SelectMany(x => x.GetFiles(path)).ToList();
+            return files.Distinct().ToList();
+        }
+
+
+        public virtual ICollection<FileSystemPath> GetDirectories(FileSystemPath path)
+        {
+            var directories = FileSystems.SelectMany(x => x.GetDirectories(path)).ToList();
+            return directories.Distinct().ToList();
+        }
     }
 }

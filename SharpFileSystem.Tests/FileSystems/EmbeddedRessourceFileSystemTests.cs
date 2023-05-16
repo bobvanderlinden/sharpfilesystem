@@ -63,6 +63,18 @@ namespace SharpFileSystem.Tests.FileSystems
             Assert.Equal(3,entities.Count);
 
             Assert.True(eRscFS.Exists("/deep/deep.txt"));
+
+            var directories = eRscFS.GetDirectories(FileSystemPath.Root).ToList();
+            Assert.Equal(1,directories.Count);
+            Assert.Equal("deep",directories[0].EntityName);
+
+            var files = eRscFS.GetFiles(FileSystemPath.Root).ToList();
+            Assert.Equal(1,files.Count);
+            Assert.Equal("deepFile.txt",files[0].EntityName);
+
+            files = eRscFS.GetFiles("/deep/").ToList();
+            Assert.Equal(1,files.Count);
+            Assert.Equal("deep.txt",files[0].EntityName);
         }
 
         [Fact]

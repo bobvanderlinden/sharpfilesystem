@@ -36,6 +36,7 @@
       </PackageReference>
     <PackageReference Include="AssertNet.Xunit" Version="1.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="NFluent" Version="3.0.0.351" />
     <PackageReference Include="NUnit" Version="3.12.0" />    
     <PackageReference Include="System.Memory" Version="4.5.3" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />

@@ -314,5 +314,18 @@ namespace SharpFileSystem.Tests
             EAssert.Throws<InvalidOperationException>(() => fileA.AppendDirectory("dir"));
             EAssert.Throws<ArgumentException>(() => root.AppendDirectory("dir/dir"));
         }
+
+        [Theory]
+        [InlineData("/root/subRoot/file.txt","/root/subRoot/",true)]
+        [InlineData("/root/subRoot/subsubroot/file.txt","/root/subRoot/",true)]
+        [InlineData("/root/subRoot2/file.txt","/root/subRoot/",false)]
+        [InlineData("/root/subRoot/file.txt","/root/subRoot/",true)]
+        [InlineData("/root/subRoot/file.txt","/root/subroot/subsubroot/",false)]
+        [InlineData("/root/subRoot/","/racine/",false)]
+
+        public void testIsRooted(FileSystemPath path, FileSystemPath root, bool isRooted)
+        {
+            Assert.Equal(isRooted,path.IsRootedBy(root));
+        }
     }
 }

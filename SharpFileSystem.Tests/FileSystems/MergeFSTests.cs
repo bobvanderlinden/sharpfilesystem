@@ -1,6 +1,11 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using NFluent;
+using NUnit.Framework;
 using SharpFileSystem.FileSystems;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace SharpFileSystem.Tests.FileSystems
 {
@@ -43,7 +48,29 @@ namespace SharpFileSystem.Tests.FileSystems
             }
             Assert.True(merge.Exists("/resDir/memoryFileThatMatchAnEmbeddedPath.txt"));
             content = merge.ReadAllText("/resDir/memoryFileThatMatchAnEmbeddedPath.txt");
-            Assert.Equal("hello embed !",content);
+            Check.That(content).IsEqualTo("hello embed !");
+
+
+            var files = merge.GetFiles("/resDir/");
+            var expectedFiles = new List<FileSystemPath>()
+                { "/resDir/deepFile.txt", "/resDir/memoryFileThatMatchAnEmbeddedPath.txt" };
+            Check.That(files).IsEquivalentTo(expectedFiles);
+
+
+            var directories = merge.GetDirectories("/");
+            var expectedDirectories = new List<FileSystemPath>() { "/memory", "/resDir" };
+            Check.That(directories).IsEquivalentTo(expectedDirectories);
+
+
+            embedFS.ChRoot("/resDir");
+
+            files = merge.GetFiles("/");
+            expectedFiles = new List<FileSystemPath>() { "/deepFile.txt" };
+            Check.That(files).IsEquivalentTo(expectedFiles);
+
+            directories = merge.GetDirectories("/");
+            expectedDirectories = new List<FileSystemPath>() { "/deep","/memory","/resDir" };
+            Check.That(directories).IsEquivalentTo(expectedDirectories);
         }
     }
 }
