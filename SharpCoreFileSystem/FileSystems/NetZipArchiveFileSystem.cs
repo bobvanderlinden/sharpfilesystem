@@ -47,6 +47,12 @@ namespace SharpFileSystem.FileSystems
         protected string ToEntryPath(FileSystemPath path)
         {
             // Remove heading '/' from path.
+            string rootedPath = path;
+            if (!Root.IsRoot)
+            {
+                rootedPath = Path.Combine(Root, path);
+            }
+
             return path.Path.TrimStart(FileSystemPath.DirectorySeparator);
         }
 

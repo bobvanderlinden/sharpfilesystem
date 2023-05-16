@@ -83,5 +83,14 @@ namespace SharpFileSystem.FileSystems
             foreach(var fs in FileSystems.Where(fs => fs.Exists(path)))
                 fs.Delete(path);
         }
+
+        public override void ChRoot(FileSystemPath root)
+        {
+            Root = root;
+            foreach (var fileSystem in FileSystems)
+            {
+                fileSystem.ChRoot(root);
+            }
+        }
     }
 }

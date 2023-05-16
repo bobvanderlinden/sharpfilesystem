@@ -23,7 +23,7 @@ namespace SharpFileSystem.FileSystems
 
 
 
-        public void ChRoot(FileSystemPath newRoot)
+        public virtual void ChRoot(FileSystemPath newRoot)
         {
             Root = newRoot;
         }
